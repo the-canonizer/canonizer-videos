@@ -1,0 +1,430 @@
+<!doctype html>
+
+<!-- source: https://thenewcode.com/977/Create-Interactive-HTML5-Video-with-WebVTT-Chapters -->
+
+<!-- source: https://hacks.mozilla.org/2014/08/building-interactive-html5-videos/ -->
+<html>
+<head>
+<!--script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></!--script -->
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="kVt9nhopql6ohpyCJ9uTDHm24i7qiQoNwOaWy3cw">
+<title>Canonizer</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap core CSS-->
+<link href="https://canonizer.com/css/bootstrap.min.css" rel="stylesheet">
+<!-- Custom fonts for this template-->
+<link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<!-- Custom styles for this template-->
+<link href="https://canonizer.com/css/canonizer.css" rel="stylesheet">
+
+<!-- jquery  -->
+<script src="https://canonizer.com/js/jquery.min.js"></script>
+<script src="https://canonizer.com/js/jquery.min.js"></script>
+<script src="https://canonizer.com/js/jquery-ui/jquery-ui.js"></script>
+<link href="https://canonizer.com/js/jquery-ui/jquery-ui.css" rel="stylesheet" type="text/css">
+
+<!--countdown timers -->
+<script src="https://canonizer.com/js/jquery.countdownTimer.min.js"></script>
+<link href="https://canonizer.com/css/jquery.countdownTimer.css" rel="stylesheet" type="text/css">
+
+
+
+<script>
+
+$(document).ready(function() {
+  location_list = document.getElementById("chapters");
+  video = document.getElementById("Conciousness_Video");
+  track_element = video.getElementsByTagName("track")[0];
+  // video.addEventListener("loadedmetadata", function run_tests() {
+  //   if (track_element.readyState == 1) {
+  //     setTimeout(run_tests, 0);
+  //   } else {
+  //     // setup_chapters();
+  //   }
+  // })
+
+  $('a#continue_button').click(function() {
+    $(this).toggleClass("down");
+  });
+
+
+});
+
+var chapters = [];
+// var video;
+var location_list;
+var last_cue_time = 0;
+var continue_selected = false;
+var cues = [];
+
+
+function select_continue(){
+  continue_selected = true;
+  var video_message = document.getElementById("video_message");
+  video_message.textContent = "";
+}
+
+function setup_chapters(track_element){
+  // debugger;
+	if ((track_element) && (textTrack = track_element.track)){
+		if (textTrack.kind === "chapters"){
+      textTrack.mode = 'hidden';
+      cues = textTrack.cues;
+			// for (var i = 0; i < textTrack.cues.length; ++i) {
+      for (var i = (cues.length - 1); i >= 0; --i) {
+				cue = cues[i];
+				chapter_name = cue.text.replace(/ /g, "_");
+				start = cue.startTime;
+
+        chapters[chapter_name] = start;
+
+				new_local = document.createElement("li");
+				new_local.setAttribute('id', start);
+				var local_description = document.createTextNode(cue.text);
+				new_local.appendChild(local_description);
+				location_list.insertBefore(new_local, location_list.childNodes[0]);
+				new_local.addEventListener("click",
+				function() {
+					video.currentTime = this.id;
+				},false);
+      }
+
+      // flashing pixe;
+      var current_cue = cues[1];
+      current_cue.onenter = function() {
+        var video_message = document.getElementById("video_message");
+        video_message.textContent = "Once you have noticed the inverting pixel in the brain, proving that for every pixel of knowledge we have, there must be something, physical, that can change and be computationally bound into consciouss awarenss, click continue.";
+        continue_selected = false;
+      }
+      current_cue.onexit = function() {
+      var current_cue = cues[1];
+      var repeat_checkbox = document.getElementById("repeat_checkbox");
+      if (repeat_checkbox.checked && ! continue_selected) {
+        continue_selected = false;
+        // video.controls = false;
+        video.currentTime = current_cue.startTime;
+      } else {
+        var video_message = document.getElementById("video_message");
+        video_message.textContent = "";
+      }
+
+      // bionic eye
+      var current_cue = cues[2];
+      current_cue.onenter = function() {
+        var current_cue = cues[2];
+        var skip_checkbox = document.getElementById("skip_checkbox");
+        if (skip_checkbox.checked)
+          video.currentTime = cues[3].startTime;
+      }
+
+      }
+      textTrack.addEventListener("cuechange",
+        function() {
+          // debugger;
+          if (this.activeCues.length > 0) {
+            var current_location = this.activeCues[0].startTime;
+            if (chapter = document.getElementById(current_location)) {
+              var locations = [].slice.call(document.querySelectorAll("#chapters li"));
+              for (var i = 0; i < locations.length; ++i) { 
+                locations[i].classList.remove("current");
+              }
+              chapter.classList.add("current");
+              location_list.style.top = "-"+chapter.parentNode.offsetTop+"px";
+          }
+          last_cue_time = current_location;
+          // debugger;
+          }
+        },false
+      );
+
+      var chapter_val = GetURLParameter("chapter");
+      if (chapter_val != "" & chapters.hasOwnProperty(chapter_val)) {
+        video.currentTime = chapters[chapter_val];
+      }
+
+		}
+	}
+}
+
+
+// this was stolen from: http://www.jquerybyexample.net/2012/06/get-url-parameters-using-jquery.html
+// var tech = GetURLParameter('technology');
+// var blog = GetURLParameter('blog');
+function GetURLParameter(sParam) {
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) {
+            return sParameterName[1];
+        }
+    }
+}
+
+
+</script>
+</head>
+
+<body>
+
+
+
+
+  <nav class="navbar navbar-expand-lg" id="mainNav">
+    <a class="navbar-brand" href="https://canonizer.com">
+        <img src="https://canonizer.com/img/logo.png">
+    </a>
+
+  
+      <strong>There is no "hard mind body problem."<br> It's just a color problem.</strong>
+  
+
+
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+            <ul class="uppermenu">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://canonizer.com">
+                    <span class="nav-link-text menu-active">Canonizer Main Page</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="https://canonizer.com/browse">
+                        <span class="nav-link-text ">Browse</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="https://canonizer.com/create/topic">
+
+                        <span class="nav-link-text ">Create New Topic</span>
+                    </a>
+                </li>
+
+                            <li class="nav-item">
+                    <a class="nav-link" href="https://canonizer.com/upload">
+                        <span class="nav-link-text ">Upload File</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://canonizer.com/topic/132-Help/1">
+                        <span class="nav-link-text ">Help</span>
+                    </a>
+                </li>
+    <li class="nav-item">
+                    <a class="nav-link" target="_blank" href="https://canonizer.com/files/2012_amplifying_final.pdf">
+                        <span class="nav-link-text">White Paper</span>
+                    </a>
+                </li>
+
+    <li class="nav-item">
+                    <a class="nav-link" href="https://canonizer.com/blog">
+                        <span class="nav-link-text">Blog</span>
+                    </a>
+                </li>
+            </ul>
+                      <ul class="lowermneu canoalgo">
+
+  <!-- set algorithm as per request -->
+                          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#canoalgo">
+                        <span class="nav-link-text">Canonizer</span>
+                    </a>
+                    <ul class="sidenav-second-level collapse show" id="canoalgo">
+                        <li>
+          <span>Canonizer Algorithm:</span>
+                            <select name="algorithm" onchange="changeAlgorithmChoice(this)">
+                                                                    <option value="blind_popularity" selected>One Person One Vote</option>
+                                                                    <option value="mind_experts" >Mind Experts</option>
+                                                                    <option value="computer_science_experts" >Computer Science Experts</option>
+                                                                    <option value="PhD" >Ph.D.</option>
+                                                                    <option value="christian" >Christian</option>
+                                                                    <option value="secular" >Secular / Non Religious</option>
+                                                                    <option value="mormon" >Mormon</option>
+                                                                    <option value="uu" >Universal Unitarian</option>
+                                                                    <option value="atheist" >Atheist</option>
+                                                                    <option value="transhumanist" >Transhumanist</option>
+                                                                    <option value="united_utah" >United Utah</option>
+                                                                    <option value="republican" >Republican</option>
+                                                                    <option value="democrat" >Democrat</option>
+                                                                </select>
+          <a href="https://canonizer.com/topic/53-Canonized-Canonizer-Algorithms/2"><span>Algorithm Information</span></a>
+                        </li>
+
+                        <li>
+                                                             <div class="filter">Filter < <input onkeypress="changeFilterOnEnter(this,event)" onblur="changeFilter(this)" type="number" value="0.001"/></div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="lowermneu asof">
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#asof">
+                        <span class="nav-link-text">As Of</span>
+                    </a>
+                    <ul class="sidenav-second-level collapse show" id="asof">
+                        <li>
+         <form name="as_of" id="as_of" method="GET">
+                         <input type="hidden" id="filter" name="filter" value="0.001"/>
+           <input type="hidden" name="_token" value="kVt9nhopql6ohpyCJ9uTDHm24i7qiQoNwOaWy3cw">
+          <div class="radio radio-primary">
+            <input type="radio"  class="asofdate" name="asof" id="radio1" value="review">
+            <label for="radio1">include review</label>
+          </div>
+          <div class="radio radio-primary">
+            <input type="radio" checked='checked' class="asofdate" name="asof" id="radio2" value="default">
+            <label for="radio2">default</label>
+          </div>
+          <div class="radio radio-primary">
+            <input type="radio"  class="asofdate" name="asof"id="radio3" value="bydate">
+            <label for="radio3">as of (yy/mm/dd)</label>
+          </div>
+          
+          <div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
+            <script>
+                                                  </script>
+        </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+                  </ul>
+    </div>
+</nav>
+
+
+
+
+<div class="content-wrapper">
+            
+
+
+  <div class="right-whitePnl">
+      <div class="container-fluid">
+                   
+        <div class="Scolor-Pnl">
+
+          
+
+          <figure>
+            <video controls id="Conciousness_Video">
+              <source src="Conciousness_Video_V15.mp4">
+              <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default onload="setup_chapters(this)">                
+          <!-- track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default="" type="text/vtt" --> 
+            </video>
+            <figcaption>
+              <ol id="chapters">
+                <li>===========</li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--a id="continue_button">Continue</a--><button id="continue_button" onclick="select_continue();">Continue</button></li>
+                <li>-- Skip Detail: <input id="skip_checkbox" type="checkbox"></li>
+                <li>*Repeats: <input id="repeat_checkbox" type="checkbox" checked></li>
+              </ol>
+            </figcaption>
+          </figure>
+          <h1 id=video_message></h1>
+        
+
+
+
+
+        </div>
+     
+      </div>
+    <div class="post"> </div>
+    
+  </div>  <!-- /.right-whitePnl-->
+  
+    <div class="homeADDright">
+      <div class="right-addsense">
+
+      </div>
+    </div>
+
+
+              <!-- footer -->
+              
+  
+              <!-- Scroll to Top Button-->
+              <a class="scroll-to-top rounded" onclick="topFunction()" href="javascript:void(0)" style="display: none;">
+                  <i class="fa fa-angle-up"></i>
+              </a>
+              <!-- Logout Modal-->
+          </div>
+
+
+
+
+
+
+
+
+</body>
+
+<style>
+  figure {
+    font-size: 0;
+    position: relative;
+    background: #000;
+  }
+  figure video {
+    width: 75%;
+    height: auto;
+    display: inline-block;
+  }
+  figure figcaption {
+    position: absolute;
+    right: 0; top: 0;
+    background: rgb(245, 245, 245);
+    width: 25%;
+    font-size: .8rem;
+    color: #666;
+    height: 100%;
+    overflow-y: scroll;
+  }
+  figure figcaption ol {
+    position: relative;
+    list-style-type: none;
+    margin: 0; padding: 0;
+  }
+  figure figcaption ol li {
+    padding: .7rem 1rem;
+    border-bottom: 1px dashed #000;
+    transition: .3s;
+  }
+  .current {
+    background: hsl(45,80%,50%);
+    color: #000;
+  }
+
+  a {
+  background: #ccc;
+  cursor: pointer;
+  border-top: solid 2px #eaeaea;
+  border-left: solid 2px #eaeaea;
+  border-bottom: solid 2px #777;
+  border-right: solid 2px #777;
+  padding: 5px 5px;
+}
+
+a.down {
+  background: #bbb;
+  border-top: solid 2px #777;
+  border-left: solid 2px #777;
+  border-bottom: solid 2px #eaeaea;
+  border-right: solid 2px #eaeaea;
+}
+</style>
+
+</html>
+
+
