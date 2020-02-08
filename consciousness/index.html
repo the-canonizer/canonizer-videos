@@ -14,7 +14,7 @@
 <title>Canonizer</title>
 
 <!-- Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+<!-- link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css" -->
 
 <!-- Bootstrap core CSS-->
 <link href="https://canonizer.com/css/bootstrap.min.css" rel="stylesheet">
@@ -41,19 +41,17 @@ $(document).ready(function() {
   location_list = document.getElementById("chapters");
   video = document.getElementById("Conciousness_Video");
   track_element = video.getElementsByTagName("track")[0];
-  // video.addEventListener("loadedmetadata", function run_tests() {
-  //   if (track_element.readyState == 1) {
-  //     setTimeout(run_tests, 0);
-  //   } else {
-  //     // setup_chapters();
-  //   }
-  // })
+  video.addEventListener("loadedmetadata", function run_tests() {
+    if (track_element.readyState == 1) {
+      setTimeout(run_tests, 0);
+    } else {
+      setup_chapters();
+    }
+  })
 
   $('a#continue_button').click(function() {
     $(this).toggleClass("down");
   });
-
-
 });
 
 var chapters = [];
@@ -70,8 +68,16 @@ function select_continue(){
   video_message.textContent = "";
 }
 
+function clean_chapter_name(name) {
+  name = name.replace(/\*/g, "");
+  name = name.trim();  // remove leading and trailing white space.
+  name = name.replace(/ /g, "_");
+  name = name.toLowerCase();
+  return(name);
+}
+
 function setup_chapters(track_element){
-  // debugger;
+  track_element = document.getElementsByTagName("track")[0];
 	if ((track_element) && (textTrack = track_element.track)){
 		if (textTrack.kind === "chapters"){
       textTrack.mode = 'hidden';
@@ -79,7 +85,7 @@ function setup_chapters(track_element){
 			// for (var i = 0; i < textTrack.cues.length; ++i) {
       for (var i = (cues.length - 1); i >= 0; --i) {
 				cue = cues[i];
-				chapter_name = cue.text.replace(/ /g, "_");
+				chapter_name = clean_chapter_name(cue.text);
 				start = cue.startTime;
 
         chapters[chapter_name] = start;
@@ -104,8 +110,8 @@ function setup_chapters(track_element){
       }
       current_cue.onexit = function() {
       var current_cue = cues[1];
-      var repeat_checkbox = document.getElementById("repeat_checkbox");
-      if (repeat_checkbox.checked && ! continue_selected) {
+      var skip_repeats = document.getElementById("skip_repeats");
+      if (! skip_repeats.checked && ! continue_selected) {
         continue_selected = false;
         // video.controls = false;
         video.currentTime = current_cue.startTime;
@@ -118,8 +124,8 @@ function setup_chapters(track_element){
       var current_cue = cues[2];
       current_cue.onenter = function() {
         var current_cue = cues[2];
-        var skip_checkbox = document.getElementById("skip_checkbox");
-        if (skip_checkbox.checked)
+        var skip_indented = document.getElementById("skip_indented");
+        if (skip_indented.checked)
           video.currentTime = cues[3].startTime;
       }
 
@@ -154,17 +160,20 @@ function setup_chapters(track_element){
 
 
 // this was stolen from: http://www.jquerybyexample.net/2012/06/get-url-parameters-using-jquery.html
+// I made it case insensative.  (all lower case)
 // var tech = GetURLParameter('technology');
 // var blog = GetURLParameter('blog');
 function GetURLParameter(sParam) {
-    var sPageURL = window.location.search.substring(1);
-    var sURLVariables = sPageURL.split('&');
-    for (var i = 0; i < sURLVariables.length; i++) {
-        var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam) {
-            return sParameterName[1];
-        }
+  var sPageURL = window.location.search.substring(1);
+  var sURLVariables = sPageURL.split('&');
+  sParam = sParam.toLowerCase();
+  for (var i = 0; i < sURLVariables.length; i++) {
+    var sParameterName = sURLVariables[i].split('=');
+    sParameterName[0] = sParameterName[0].toLocaleLowerCase();
+    if (sParameterName[0] == sParam) {
+      return sParameterName[1].toLocaleLowerCase();
     }
+  }
 }
 
 
@@ -175,13 +184,13 @@ function GetURLParameter(sParam) {
 
   <table width=100%>
   <tr>
-    <th width=250>
+    <th width="250px">
       <a style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" class="navbar-brand" href="https://canonizer.com">
       <img src="https://canonizer.com/img/logo.png" width=146 height=110>
       </a>
     </th>
-    <th style="text-align: center;"><font style="text-align: center;" size=6>There&nbsp;is&nbsp;no&nbsp;"hard&nbsp;mind&nbsp;body&nbsp;problem"<br>It's just a color problem</font></th>
-    <th width=120></tr>
+    <th width="960px" style="text-align: center;"><font style="text-align: center;" size=6>There&nbsp;is&nbsp;no&nbsp;"hard&nbsp;mind&nbsp;body&nbsp;problem"<br>It's just a color problem</font></th>
+    <th></tr>
   <tr>
     <td style="vertical-align: top;">
       <figcaption style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" >
@@ -190,11 +199,11 @@ function GetURLParameter(sParam) {
 
         <ul class="lowermneu asof">
           <button class=centered id="continue_button" onclick="select_continue();">Continue</button>
-          <div style="margin-left: 10px; margin-top: 10px;">
-            <input style="margin-top: 8px;" id="skip_checkbox" type="checkbox">Skip Indented
+          <div style="margin-left: 20px; margin-top: 10px;">
+            <input style="margin-top: 8px;" id="skip_indented" type="checkbox">Skip Indented
           </div>
-          <div style="margin-left: 10px; margin-top: 10px; margin-bottom: 8px;">
-            <input style="margin-top: 8px;" id="repeat_checkbox" type="checkbox" checked>Skip Repeats
+          <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 8px;">
+            <input style="margin-top: 8px;" id="skip_repeats" type="checkbox">Skip Repeats *
           </div>
         </ul>
       </figcaption>
@@ -202,7 +211,7 @@ function GetURLParameter(sParam) {
     <td>
       <video controls id="Conciousness_Video">
         <source src="Conciousness_Video_V15.mp4">
-        <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default onload="setup_chapters(this)">                
+        <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>                
       </video>
     </td>
     <td>
@@ -409,6 +418,7 @@ function GetURLParameter(sParam) {
 button.centered {
     display: block;
     margin-left: auto;
+    margin-top: 4px;
     margin-right: auto }
 
   figure {
