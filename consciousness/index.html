@@ -92,13 +92,18 @@ function setup_chapters(track_element){
 
 				new_local = document.createElement("li");
 				new_local.setAttribute('id', start);
-				var local_description = document.createTextNode(cue.text);
-				new_local.appendChild(local_description);
+        var print_name = cue.text;
+        if (print_name == "Bionic Eye"){
+          print_name = "&nbsp;&nbsp;&nbsp;&nbsp;" + print_name;
+        }
+        new_local.innerHTML = print_name;
 				location_list.insertBefore(new_local, location_list.childNodes[0]);
 				new_local.addEventListener("click",
-				function() {
-					video.currentTime = this.id;
-				},false);
+				  function() {
+					  video.currentTime = this.id;
+				  },
+          false
+        );
       }
 
       // flashing pixe;
@@ -186,7 +191,7 @@ function GetURLParameter(sParam) {
   <tr>
     <th width="250px">
       <a style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" class="navbar-brand" href="https://canonizer.com">
-      <img src="https://canonizer.com/img/logo.png" width=146 height=110>
+        <img src="https://canonizer.com/img/logo.png" width=146 height=110>
       </a>
     </th>
     <th width="960px" style="text-align: center;"><font style="text-align: center;" size=6>There&nbsp;is&nbsp;no&nbsp;"hard&nbsp;mind&nbsp;body&nbsp;problem"<br>It's just a color problem</font></th>
@@ -197,7 +202,7 @@ function GetURLParameter(sParam) {
         <ol id="chapters">
         </ol>
 
-        <ul class="lowermneu asof">
+        <ul style="margin-top: 100px;" class="lowermneu asof">
           <button class=centered id="continue_button" onclick="select_continue();">Continue</button>
           <div style="margin-left: 20px; margin-top: 10px;">
             <input style="margin-top: 8px;" id="skip_indented" type="checkbox">Skip Indented
@@ -415,7 +420,7 @@ function GetURLParameter(sParam) {
 </body>
 
 <style>
-button.centered {
+.centered {
     display: block;
     margin-left: auto;
     margin-top: 4px;
