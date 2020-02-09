@@ -114,7 +114,7 @@ function setup_chapters(track_element){
       var current_cue = cues[1];
       current_cue.onenter = function() {
         var video_message = document.getElementById("video_message");
-        video_message.textContent = "Once you have noticed the inverting pixel in the brain, proving that for every pixel of knowledge we have, there must be something, physical, that can change and be computationally bound into consciouss awarenss, click continue.";
+        video_message.innerHTML = "Once you have noticed the inverting pixel in the brain, proving that for every pixel of knowledge we have, there must be something, physical, that can change and be computationally bound into consciouss awarenss<br><center><b>click continue.</b></center>";
         continue_selected = false;
       }
       current_cue.onexit = function() {
@@ -219,10 +219,19 @@ function GetURLParameter(sParam) {
       </figcaption>
     </td>
     <td>
-      <video controls id="Conciousness_Video">
-        <source src="Conciousness_Video_V15.mp4">
-        <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>                
-      </video>
+      <div class="video-content-wrapper">
+        <div class="video-right-whitePnl">
+          <div class="container-fluid">
+            <div class="Scolor-Pnl">
+              <video controls id="Conciousness_Video">
+                <source src="Conciousness_Video_V15.mp4">
+                <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>                
+              </video>
+              <div style="min-height: 100px; margin: 0.5rem 2rem 2rem 2rem;" id=video_message> </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </td>
     <td>
       <div class="homeADDright">
@@ -240,173 +249,11 @@ function GetURLParameter(sParam) {
       </div>
     </td>
   </tr>
-  <tr style="height: 100px;">
-    <td></td><td id=video_message></td><td></td>
+  <tr >
+    <td></td><td ></td><td></td>
   </tr>
   </table>
-
-  <nav class="navbar navbar-expand-lg" id="mainNav">
-    <a class="navbar-brand" href="https://canonizer.com">
-        <img src="https://canonizer.com/img/logo.png">
-    </a>
-
   
-      <center><strong>There&nbsp;is&nbsp;no&nbsp;"hard&nbsp;mind&nbsp;body&nbsp;problem."<br> It's just a color problem.</strong></center>
-  
-
-
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-            <ul class="uppermenu">
-                <li class="nav-item">
-                    <a class="nav-link" href="https://canonizer.com">
-                    <span class="nav-link-text menu-active">Canonizer Main Page</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="https://canonizer.com/browse">
-                        <span class="nav-link-text ">Browse</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="https://canonizer.com/create/topic">
-
-                        <span class="nav-link-text ">Create New Topic</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="https://canonizer.com/upload">
-                        <span class="nav-link-text ">Upload File</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="https://canonizer.com/topic/132-Help/1">
-                        <span class="nav-link-text ">Help</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" target="_blank" href="https://canonizer.com/files/2012_amplifying_final.pdf">
-                        <span class="nav-link-text">White Paper</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="https://canonizer.com/blog">
-                        <span class="nav-link-text">Blog</span>
-                    </a>
-                </li>
-            </ul>
-        <ul class="lowermneu canoalgo">
-
-  <!-- set algorithm as per request -->
-                          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#canoalgo">
-                        <span class="nav-link-text">Canonizer</span>
-                    </a>
-                    <ul class="sidenav-second-level collapse show" id="canoalgo">
-                        <li>
-          <span>Canonizer Algorithm:</span>
-                            <select name="algorithm" onchange="changeAlgorithmChoice(this)">
-                                                                    <option value="blind_popularity" selected>One Person One Vote</option>
-                                                                    <option value="mind_experts" >Mind Experts</option>
-                                                                    <option value="computer_science_experts" >Computer Science Experts</option>
-                                                                    <option value="PhD" >Ph.D.</option>
-                                                                    <option value="christian" >Christian</option>
-                                                                    <option value="secular" >Secular / Non Religious</option>
-                                                                    <option value="mormon" >Mormon</option>
-                                                                    <option value="uu" >Universal Unitarian</option>
-                                                                    <option value="atheist" >Atheist</option>
-                                                                    <option value="transhumanist" >Transhumanist</option>
-                                                                    <option value="united_utah" >United Utah</option>
-                                                                    <option value="republican" >Republican</option>
-                                                                    <option value="democrat" >Democrat</option>
-                                                                </select>
-          <a href="https://canonizer.com/topic/53-Canonized-Canonizer-Algorithms/2"><span>Algorithm Information</span></a>
-                        </li>
-
-                        <li>
-                                                             <div class="filter">Filter < <input onkeypress="changeFilterOnEnter(this,event)" onblur="changeFilter(this)" type="number" value="0.001"/></div>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <ul class="lowermneu asof">
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#asof">
-                        <span class="nav-link-text">As Of</span>
-                    </a>
-                    <ul class="sidenav-second-level collapse show" id="asof">
-                        <li>
-         <form name="as_of" id="as_of" method="GET">
-                         <input type="hidden" id="filter" name="filter" value="0.001"/>
-           <input type="hidden" name="_token" value="kVt9nhopql6ohpyCJ9uTDHm24i7qiQoNwOaWy3cw">
-          <div class="radio radio-primary">
-            <input type="radio"  class="asofdate" name="asof" id="radio1" value="review">
-            <label for="radio1">include review</label>
-          </div>
-          <div class="radio radio-primary">
-            <input type="radio" checked='checked' class="asofdate" name="asof" id="radio2" value="default">
-            <label for="radio2">default</label>
-          </div>
-          <div class="radio radio-primary">
-            <input type="radio"  class="asofdate" name="asof"id="radio3" value="bydate">
-            <label for="radio3">as of (yy/mm/dd)</label>
-          </div>
-          
-          <div><input readonly type="text" id="asofdate" name="asofdate" value=""/></div>
-            <script>
-                                                  </script>
-        </form>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-                  </ul>
-    </div>
-</nav>
-
-
-
-
-<div class="content-wrapper">
-            
-
-
-  <div class="right-whitePnl">
-      <div class="container-fluid">
-                   
-        <div class="Scolor-Pnl">
-
-          
-
-          <h1 id=Xvideo_message></h1>
-        
-
-
-
-
-        </div>
-     
-      </div>
-    <div class="post"> </div>
-    
-  </div>  <!-- /.right-whitePnl-->
-  
-    <div class="homeADDright">
-      <div class="right-addsense">
-
-      </div>
-    </div>
-
-
               <!-- footer -->
               
   
@@ -471,6 +318,16 @@ function GetURLParameter(sParam) {
   li {
     color: rgb(0, 0, 255)
   }
+
+.video-content-wrapper {
+    margin-left: 0px;
+
+}
+.video-right-whitePnl {
+    background-color: rgb(255, 255, 255);
+    padding:2rem 1rem 2rem 1rem;
+}
+
 
 
 a.down {
