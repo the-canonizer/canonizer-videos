@@ -91,16 +91,20 @@ function setup_chapters(track_element){
         chapters[chapter_name] = start;
 
 				new_local = document.createElement("li");
-				new_local.setAttribute('id', start);
+				new_local.setAttribute('id', start); //  + "_id");
+        new_local.setAttribute('accessKey', chapter_name);
+        new_local.setAttribute('class', "nav-link-text");
         var print_name = cue.text;
         if (print_name == "Bionic Eye"){
           print_name = "&nbsp;&nbsp;&nbsp;&nbsp;" + print_name;
         }
         new_local.innerHTML = print_name;
-				location_list.insertBefore(new_local, location_list.childNodes[0]);
+        location_list.insertBefore(new_local, location_list.childNodes[0]);
 				new_local.addEventListener("click",
 				  function() {
-					  video.currentTime = this.id;
+            var start_time = this.id;
+            // start_time = start_timereplace(/_id/g, "");
+					  video.currentTime = start_time;
 				  },
           false
         );
@@ -137,20 +141,18 @@ function setup_chapters(track_element){
       }
       textTrack.addEventListener("cuechange",
         function() {
-          // debugger;
-          if (this.activeCues.length > 0) {
+            if (this.activeCues.length > 0) {
             var current_location = this.activeCues[0].startTime;
-            if (chapter = document.getElementById(current_location)) {
+            if (chapter = document.getElementById(current_location)) {; // + "_id")) {
               var locations = [].slice.call(document.querySelectorAll("#chapters li"));
               for (var i = 0; i < locations.length; ++i) { 
-                locations[i].classList.remove("current");
+                locations[i].classList.remove("menu-active");
               }
-              chapter.classList.add("current");
+              chapter.classList.add("menu-active");
               // location_list.style.top = "-"+chapter.parentNode.offsetTop+"px";
           }
           last_cue_time = current_location;
-          // debugger;
-          }
+         }
         },false
       );
 
@@ -199,8 +201,11 @@ function GetURLParameter(sParam) {
   <tr>
     <td style="vertical-align: top;">
       <figcaption style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" >
-        <ol id="chapters">
+        <!---  chapters list is put here:  -->
+        <ol style="padding-left: 1rem;" class="uppermenu" id="chapters">
+
         </ol>
+        <!---  chapters list is put above:  -->
 
         <ul style="margin-top: 100px;" class="lowermneu asof">
           <button class=centered id="continue_button" onclick="select_continue();">Continue</button>
@@ -254,7 +259,7 @@ function GetURLParameter(sParam) {
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
             <ul class="uppermenu">
                 <li class="nav-item">
                     <a class="nav-link" href="https://canonizer.com">
@@ -275,29 +280,31 @@ function GetURLParameter(sParam) {
                     </a>
                 </li>
 
-                            <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link" href="https://canonizer.com/upload">
                         <span class="nav-link-text ">Upload File</span>
                     </a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="https://canonizer.com/topic/132-Help/1">
                         <span class="nav-link-text ">Help</span>
                     </a>
                 </li>
-    <li class="nav-item">
+
+                <li class="nav-item">
                     <a class="nav-link" target="_blank" href="https://canonizer.com/files/2012_amplifying_final.pdf">
                         <span class="nav-link-text">White Paper</span>
                     </a>
                 </li>
 
-    <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link" href="https://canonizer.com/blog">
                         <span class="nav-link-text">Blog</span>
                     </a>
                 </li>
             </ul>
-                      <ul class="lowermneu canoalgo">
+        <ul class="lowermneu canoalgo">
 
   <!-- set algorithm as per request -->
                           <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
@@ -461,15 +468,10 @@ function GetURLParameter(sParam) {
     color: #000;
   }
 
-  a {
-  background: #ccc;
-  cursor: pointer;
-  border-top: solid 2px #eaeaea;
-  border-left: solid 2px #eaeaea;
-  border-bottom: solid 2px #777;
-  border-right: solid 2px #777;
-  padding: 5px 5px;
-}
+  li {
+    color: rgb(0, 0, 255)
+  }
+
 
 a.down {
   background: #bbb;
