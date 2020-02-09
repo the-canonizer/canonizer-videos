@@ -47,6 +47,30 @@ $(document).ready(function() {
     } else {
       setup_chapters();
     }
+
+  // get url set arguments
+  var skip_indented_arg = GetURLParameter("skip_indented");
+  if (typeof(skip_indented_arg) != "undefined") {
+    var skip_indented_check_box = document.getElementById("skip_indented");
+    if (skip_indented_arg != 0 ){
+      skip_indented_check_box.checked = true;
+    } else {
+      skip_indented_check_box.checked = false;
+    }
+  }
+  // skip repeats
+  var skip_indented_arg = GetURLParameter("skip_repeats");
+  if (typeof(skip_indented_arg) != "undefined") {
+    var skip_repeats_check_box = document.getElementById("skip_repeats");
+    if (skip_indented_arg != 0 ){
+      skip_repeats_check_box.checked = true;
+    } else {
+      skip_indented_check_box.checked = false;
+    }
+  }
+
+
+  // set copyright end year
   var year_span = document.getElementById("copyright_year");
   var d = new Date();
   var n = d.getFullYear();
@@ -161,8 +185,10 @@ function setup_chapters(track_element){
       );
 
       var chapter_val = GetURLParameter("chapter");
-      if (chapter_val != "" & chapters.hasOwnProperty(chapter_val)) {
-        video.currentTime = chapters[chapter_val];
+      if (typeof(chapter_val) != "undefined") {
+        if (chapters.hasOwnProperty(chapter_val)) {
+          video.currentTime = chapters[chapter_val];
+        }
       }
 
 		}
