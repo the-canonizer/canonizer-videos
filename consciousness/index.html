@@ -47,6 +47,10 @@ $(document).ready(function() {
     } else {
       setup_chapters();
     }
+  var year_span = document.getElementById("copyright_year");
+  var d = new Date();
+  var n = d.getFullYear();
+  year_span.innerHTML = n;
   })
 
   $('a#continue_button').click(function() {
@@ -190,85 +194,81 @@ function GetURLParameter(sParam) {
 <body>
 
   <table width=100%>
-  <tr>
-    <th width="250px">
-      <a style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" class="navbar-brand" href="https://canonizer.com">
-        <img src="https://canonizer.com/img/logo.png" width=146 height=110>
-      </a>
-    </th>
-    <th width="960px" style="text-align: center;"><font style="text-align: center;" size=6>There&nbsp;is&nbsp;no&nbsp;"hard&nbsp;mind&nbsp;body&nbsp;problem"<br>It's just a color problem</font></th>
-    <th></tr>
-  <tr>
-    <td style="vertical-align: top;">
-      <figcaption style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" >
-        <!---  chapters list is put here:  -->
-        <ol style="padding-left: 1rem;" class="uppermenu" id="chapters">
+    <tr>
+      <th width="250px">
+        <a style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" class="navbar-brand" href="https://canonizer.com">
+          <img src="https://canonizer.com/img/logo.png" width=146 height=110>
+        </a>
+      </th>
+      <th width="960px" style="text-align: center;"><font style="text-align: center;" size=6>There&nbsp;is&nbsp;no&nbsp;"hard&nbsp;mind&nbsp;body&nbsp;problem"<br>It's just a color problem</font></th>
+      <th></tr>
+    <tr>
+      <td style="vertical-align: top;">
+        <figcaption style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" >
+          <!---  chapters list is put here:  -->
+          <ol style="padding-left: 1rem;" class="uppermenu" id="chapters">
 
-        </ol>
-        <!---  chapters list is put above:  -->
+          </ol>
+          <!---  chapters list is put above:  -->
 
-        <ul style="margin-top: 100px;" class="lowermneu asof">
-          <button class=centered id="continue_button" onclick="select_continue();">Continue</button>
-          <div style="margin-left: 20px; margin-top: 10px;">
-            <input style="margin-top: 8px;" id="skip_indented" type="checkbox">Skip Indented
-          </div>
-          <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 8px;">
-            <input style="margin-top: 8px;" id="skip_repeats" type="checkbox">Skip Repeats *
-          </div>
-        </ul>
-      </figcaption>
-    </td>
-    <td>
-      <div class="video-content-wrapper">
-        <div class="video-right-whitePnl">
-          <div class="container-fluid">
-            <div class="Scolor-Pnl">
-              <video controls id="Conciousness_Video">
-                <source src="Conciousness_Video_V15.mp4">
-                <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>                
-              </video>
-              <div style="min-height: 100px; margin: 0.5rem 2rem 2rem 2rem;" id=video_message> </div>
+          <ul style="margin-top: 100px;" class="lowermneu asof">
+            <button class=centered id="continue_button" onclick="select_continue();">Continue</button>
+            <div style="margin-left: 20px; margin-top: 10px;">
+              <input style="margin-top: 8px;" id="skip_indented" type="checkbox">Skip Indented
+            </div>
+            <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 8px;">
+              <input style="margin-top: 8px;" id="skip_repeats" type="checkbox">Skip Repeats *
+            </div>
+          </ul>
+        </figcaption>
+      </td>
+      <td>
+        <div class="video-content-wrapper">
+          <div class="video-right-whitePnl">
+            <div class="container-fluid">
+              <div class="Scolor-Pnl">
+                <video controls id="Conciousness_Video">
+                  <source src="Conciousness_Video_V15.mp4">
+                  <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>                
+                </video>
+                <div style="min-height: 100px; margin: 0.5rem 2rem 2rem 2rem;" id=video_message> </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </td>
-    <td>
-      <div class="homeADDright">
-        <div class="right-addsense"><!----
-          <script type="text/javascript">
-              google_ad_client = "pub-6646446076038181";
-              //120x600, right bar
-              google_ad_slot = "5819006657";
-              google_ad_width = 115;
-              google_ad_height = 600;
-              //-->
-          <!--/script> -->
-          <script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
-        </div>
-      </div>
-    </td>
-  </tr>
-  <tr >
-    <td></td><td ></td><td></td>
-  </tr>
-  </table>
-  
-              <!-- footer -->
-              
-  
-              <!-- Scroll to Top Button-->
-              <a class="scroll-to-top rounded" onclick="topFunction()" href="javascript:void(0)" style="display: none;">
-                  <i class="fa fa-angle-up"></i>
-              </a>
-              <!-- Logout Modal-->
+      </td>
+      <td>
+        <div class="homeADDright">
+          <div class="right-addsense"><!----
+            <script type="text/javascript">
+                google_ad_client = "pub-6646446076038181";
+                //120x600, right bar
+                google_ad_slot = "5819006657";
+                google_ad_width = 115;
+                google_ad_height = 600;
+                //-->
+            <!--/script> -->
+            <script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
           </div>
-
-
-
-
-
-
+        </div>
+      </td>
+    </tr>
+    <tr >
+      <td></td><td ></td><td></td>
+    </tr>
+  </table>
+  <footer class="sticky-footer">
+    <div class="container">
+        <div class="row">
+            <!--<div class="col-sm-4 pd-l-0"><span>Sponsers: &nbsp;&nbsp; <img src="img/mta-thumb.png"/></span></div>-->
+            <div class="col-sm-12 text-center">
+                <small>Copyright owned by the volunteers contributing to the system and its contents (2006 - <span id=copyright_year></span>)</small>
+                <small>Comments and Questions: support@canonizer.com</small>
+	              <small><a href="{{url('privacypolicy')}}">Privacy Policy</a> | Pattent: US 8,160,970 B2 | <a href="{{url('termservice')}}">Terms & Services</a></small>
+            </div>
+        </div>
+    </div>
+  </footer>
 
 
 </body>
