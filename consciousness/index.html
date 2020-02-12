@@ -226,7 +226,7 @@ function GetURLParameter(sParam) {
           <img src="https://canonizer.com/img/logo.png" width=146 height=110>
         </a>
       </td>
-      <td width="960px" style="text-align: center;"><font style="text-align: center;" size=6>There&nbsp;is&nbsp;no&nbsp;"hard&nbsp;mind&nbsp;body&nbsp;problem"<br>It's just a color problem</font></td>
+      <td width="1030px" style="text-align: center;"><font style="text-align: center;" size=6><b>There&nbsp;is&nbsp;no&nbsp;"hard&nbsp;mind&nbsp;body&nbsp;problem"<br>It's just a color problem</b></font></td>
       <td  style="vertical-align: top;" rowspan="3" >
         <div style="padding: 0.5rem 0 0 1rem;" class="homeADDright">
           <div class="right-addsense">
@@ -247,34 +247,27 @@ function GetURLParameter(sParam) {
         <figcaption style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" >
           <!---  chapters list is put here:  -->
           <ol style="padding-left: 1rem;" class="uppermenu" id="chapters">
-
           </ol>
           <!---  chapters list is put above:  -->
 
           <ul style="margin-top: 100px;" class="lowermneu asof">
-            <button class=centered id="continue_button" onclick="select_continue();">Continue</button>
+            <button class=centered id="continue_button" style="cursor: pointer;" onclick="select_continue();">Continue</button>
             <div style="margin-left: 20px; margin-top: 10px;">
-              <input style="margin-top: 8px;" id="skip_indented" type="checkbox">Skip Indented
+              <input style="margin-top: 8px; cursor: pointer;" id="skip_indented" type="checkbox">Skip Indented
             </div>
             <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 8px;">
-              <input style="margin-top: 8px;" id="skip_repeats" type="checkbox">Skip Repeats *
+              <input style="margin-top: 8px; cursor: pointer;" id="skip_repeats" type="checkbox">Skip Repeats *
             </div>
           </ul>
         </figcaption>
       </td>
-      <td>
-        <div class="video-content-wrapper">
-          <div class="video-right-whitePnl">
-            <div class="container-fluid">
-              <div class="Scolor-Pnl">
-                <video controls id="Conciousness_Video">
-                  <source src="Conciousness_Video_V15.mp4">
-                  <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>                
-                </video>
-                <div style="min-height: 100px; margin: 0.5rem 2rem 2rem 2rem;" id=video_message> </div>
-              </div>
-            </div>
-          </div>
+      <td style="text-align: center; background-color: rgb(255, 255, 255)">
+        <div style="display: inline-block; margin-top: 2rem;" >
+          <video controls  id="Conciousness_Video">
+            <source src="Conciousness_Video_V15.mp4">
+            <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>                
+          </video>
+          <div style="min-height: 100px; margin: 0.5rem 2rem 2rem 2rem;" id=video_message> </div>
         </div>
       </td>
     </tr>
@@ -341,17 +334,9 @@ function GetURLParameter(sParam) {
   }
 
   li {
-    color: rgb(0, 0, 255)
+    color: rgb(0, 0, 255);
+    cursor: pointer;
   }
-
-.video-content-wrapper {
-    margin-left: 0px;
-
-}
-.video-right-whitePnl {
-    background-color: rgb(255, 255, 255);
-    padding:2rem 1rem 2rem 1rem;
-}
 
 
 
