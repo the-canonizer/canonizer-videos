@@ -174,9 +174,9 @@ function setup_chapters(track_element){
             if (chapter = document.getElementById(current_location)) {; // + "_id")) {
               var locations = [].slice.call(document.querySelectorAll("#chapters li"));
               for (var i = 0; i < locations.length; ++i) { 
-                locations[i].classList.remove("menu-active");
+                locations[i].classList.remove("strong-menu-active");
               }
-              chapter.classList.add("menu-active");
+              chapter.classList.add("strong-menu-active");
               // location_list.style.top = "-"+chapter.parentNode.offsetTop+"px";
           }
           last_cue_time = current_location;
@@ -337,6 +337,13 @@ function GetURLParameter(sParam) {
     color: rgb(0, 0, 255);
     cursor: pointer;
   }
+
+.strong-menu-active {
+  font-weight:600;
+  color:#10e410	;   /* #1cb41c	; */
+  background-color: #f6efe2; /*-webkit-linear-gradient(left, #ffefd2 , #eeeff3); */
+}
+
 
 
 
