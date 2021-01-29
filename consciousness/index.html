@@ -174,9 +174,9 @@ function setup_chapters(track_element){
             if (chapter = document.getElementById(current_location)) {; // + "_id")) {
               var locations = [].slice.call(document.querySelectorAll("#chapters li"));
               for (var i = 0; i < locations.length; ++i) { 
-                locations[i].classList.remove("strong-menu-active");
+                locations[i].classList.remove("menu-active");  // ("strong-menu-active");
               }
-              chapter.classList.add("strong-menu-active");
+              chapter.classList.add("menu-active");  // ("strong-menu-active");
               // location_list.style.top = "-"+chapter.parentNode.offsetTop+"px";
           }
           last_cue_time = current_location;
@@ -265,7 +265,7 @@ function GetURLParameter(sParam) {
         <div style="display: inline-block; margin-top: 2rem;" >
           <video controls  id="Conciousness_Video">
             <source src="Conciousness_Video_V15.mp4">
-            <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>                
+            <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>
           </video>
           <div style="min-height: 100px; margin: 0.5rem 2rem 2rem 2rem;" id=video_message> </div>
         </div>
@@ -340,8 +340,8 @@ function GetURLParameter(sParam) {
 
 .strong-menu-active {
   font-weight:600;
-  color:#10e410	;   /* #1cb41c	; */
-  background-color: #f6efe2; /*-webkit-linear-gradient(left, #ffefd2 , #eeeff3); */
+  color: #00E060	;   /* #00b050	; #10e410	 ; #1cb41c	; */
+  background-color: #ffefd2; /* #f6efe2  -webkit-linear-gradient(left, #ffefd2 , #eeeff3); */
 }
 
 
