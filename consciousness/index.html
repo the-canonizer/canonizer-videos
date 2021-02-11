@@ -33,58 +33,176 @@
 <script src="https://canonizer.com/js/jquery.countdownTimer.min.js"></script>
 <link href="https://canonizer.com/css/jquery.countdownTimer.css" rel="stylesheet" type="text/css">
 
-
-
 <script>
 
 $(document).ready(function() {
-  location_list = document.getElementById("chapters");
-  video = document.getElementById("Conciousness_Video");
-  track_element = video.getElementsByTagName("track")[0];
-  video.addEventListener("loadedmetadata", function run_tests() {
-    if (track_element.readyState == 1) {
-      setTimeout(run_tests, 0);
-    } else {
-      setup_chapters();
-    }
-
-  // get url set arguments
-  var skip_indented_arg = GetURLParameter("skip_indented");
-  if (typeof(skip_indented_arg) != "undefined") {
-    var skip_indented_check_box = document.getElementById("skip_indented");
-    if (skip_indented_arg != 0 ){
-      skip_indented_check_box.checked = true;
-    } else {
-      skip_indented_check_box.checked = false;
-    }
-  }
-  // skip repeats
-  var skip_indented_arg = GetURLParameter("skip_repeats");
-  if (typeof(skip_indented_arg) != "undefined") {
-    var skip_repeats_check_box = document.getElementById("skip_repeats");
-    if (skip_indented_arg != 0 ){
-      skip_repeats_check_box.checked = true;
-    } else {
-      skip_indented_check_box.checked = false;
-    }
-  }
-
 
   // set copyright end year
   var year_span = document.getElementById("copyright_year");
   var d = new Date();
   var n = d.getFullYear();
   year_span.innerHTML = n;
-  })
+
 
   $('a#continue_button').click(function() {
     $(this).toggleClass("down");
   });
+
+/////////////////// new stuff starts here ///////////////////////
+// some of this stuff is taken from the
+// "Try with setting the display to block and none:" answer on stack overflow:
+// https://stackoverflow.com/questions/52514522/html5-video-how-to-seamlessly-play-several-videos-and-then-loop-the-sequence
+/////////////////////////////////////////////////////////////////
+
+  // var first_vid = document.getElementById("introduction_1024");
+  // first_vid.style.display = "none";
+
+  setup_multi_video_html();
+  setup_chapter_structure();
+  setup_chapter_buttons();
+  
+
+  // format argument
+  current_format = "720";
+  var format_arg = GetURLParameter("format");
+  if (formats[format_arg] != undefined) {
+    current_format = format_arg;
+  }
+  var input_720p  = document.getElementById("720p" );
+  var input_1080p = document.getElementById("1080p");
+  if (current_format == "720"){
+    input_720p.checked = true;
+  } else {
+    input_1080p.checked = true;
+  }
+
+  // chapter argument
+  current_chapter = "introduction";
+  var chapter_arg = GetURLParameter("chapter");
+  if (chapter_specs[chapter_arg] != undefined) {
+    current_chapter = chapter_arg;
+  }
+
+  // can't do this because don't want sound, if they want to a playing URL.
+  // var play_arg = GetURLParameter("play");
+  
+
+  // set_video_message("[" + current_chapter + "]" + current_format + " " + JSON.stringify(chapter_structure));
+
+  var current_chapter_record = chapter_structure[current_chapter];
+  var current_video = current_chapter_record.format_structure[current_format]
+  current_video.style.display = "block";
+  current_chapter_record.button.classList.add("menu-active");  // ("strong-menu-active");
+
+
+
 });
 
-var chapters = [];
-// var video;
-var location_list;
+// key : button name
+var chapter_specs = {
+  "introduction"                      : "Introduction",
+  "perceiving_a_strawberry"           : "Perceiving a Strawberry",
+  "differentiate_reality_knowledge"   : "Differentiating Reality and Knowledge of Reality",
+  "representational_qualia_consensus" : "Representational Qualia Theory Consensus",
+  "conclusion"                        : "Conclusion"
+};
+
+
+var formats = {
+  "720"  : 1,
+  "1080" : 1
+};
+
+var current_chapter;
+var current_format;
+
+
+function setup_multi_video_html() {
+  var html = "";
+  for (chapter_key in chapter_specs) {
+    for (var format in formats) {
+      html +=
+      `
+      <video controls id="video_${chapter_key+"_"+format}" playsinline>
+         <source src="${chapter_key+"_"+format+".mp4"}">
+       </video>
+      `;
+//         <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>
+    }
+  }
+  var multi_video_block = document.getElementById("multi_video_block");
+  multi_video_block.innerHTML = html;
+}
+
+
+var chapter_structure;
+function setup_chapter_structure() {
+  chapter_structure = {};
+  last_chapter = null;
+  for (chapter_key in chapter_specs) {
+    chapter = new Object();
+    chapter.next_chapter = null;
+    var format_structure = {};
+    for (var format in formats) {
+      var cur_name = "video_" + chapter_key + "_" + format;
+      var cur_video = document.getElementById(cur_name);
+      cur_video.style.display = "none";
+      cur_video.addEventListener('ended', function(e) {change_chapter()});
+      format_structure[format] = cur_video;
+    }
+    chapter.format_structure = format_structure;
+    chapter_structure[chapter_key] = chapter;
+    if (last_chapter != null) {
+      last_chapter.next_chapter = chapter_key;
+    }
+    last_chapter = chapter;
+  }
+}
+
+
+function change_chapter(next_chapter, next_format) {
+  var current_chapter_record = chapter_structure[current_chapter];
+  var current_video = current_chapter_record.format_structure[current_format];
+
+  if (next_format != null) current_format = next_format;
+
+  var playing = false;
+  if (next_chapter == null || !current_video.paused)  playing = true;// if we got to the end of the last chapter, we are still playing.
+ 
+  current_video.pause();
+
+  if (next_chapter == null) {
+      next_chapter  = current_chapter_record.next_chapter;
+  }
+  if (next_chapter != null) {
+    var next_chapter_record = chapter_structure[next_chapter];
+    var next_video          = next_chapter_record.format_structure[current_format];
+    next_video.currentTime = 0;
+    if (playing) {
+      next_video.play();
+    }
+    current_video.style.display = "none";
+    current_chapter_record.button.classList.remove("menu-active");  // ("strong-menu-active");
+    next_video.style.display    = "block";
+    next_chapter_record.button.classList.add("menu-active");  // ("strong-menu-active");
+    current_chapter = next_chapter;
+  }
+}
+
+
+function set_video_message(video_message) {
+  var video_message_element = document.getElementById("video_message");
+  video_message_element.textContent = video_message;
+}
+
+// var multi_video_block = document.getElementById("multi_video_block");
+// multi_video_block.innerHTML = "<b>Hello</b>"; // chapter_structure;
+
+
+///////////////////////////////
+// end new stuff
+///////////////////////////////
+
 var last_cue_time = 0;
 var continue_selected = false;
 var cues = [];
@@ -104,95 +222,134 @@ function clean_chapter_name(name) {
   return(name);
 }
 
-function setup_chapters(track_element){
-  track_element = document.getElementsByTagName("track")[0];
-	if ((track_element) && (textTrack = track_element.track)){
-		if (textTrack.kind === "chapters"){
-      textTrack.mode = 'hidden';
-      cues = textTrack.cues;
-			// for (var i = 0; i < textTrack.cues.length; ++i) {
-      for (var i = (cues.length - 1); i >= 0; --i) {
-				cue = cues[i];
-				chapter_name = clean_chapter_name(cue.text);
-				start = cue.startTime;
 
-        chapters[chapter_name] = start;
+function setup_chapter_buttons(){
+  var location_list = document.getElementById("chapters");
+  for (chapter_key in chapter_specs) {
+		new_li = document.createElement("li");
+		new_li.setAttribute('id', chapter_key + "_li"); //  + "_id");
+    new_li.setAttribute('accessKey', chapter_key);
+    new_li.setAttribute('class', "nav-link-text");
+    var button_name = chapter_specs[chapter_key];
+//    if (print_name == "Bionic Eye"){
+//      print_name = "&nbsp;&nbsp;&nbsp;&nbsp;" + print_name;
+//    }
+    new_li.innerHTML = button_name;
+    chapter_structure[chapter_key].button = new_li;
+    location_list.insertBefore (new_li, null);
+    new_li.addEventListener("click",
+      function() {
+        var format_arg = "";
+        if (current_format == "1080")
+          format_arg = "&format=1080";
 
-				new_local = document.createElement("li");
-				new_local.setAttribute('id', start); //  + "_id");
-        new_local.setAttribute('accessKey', chapter_name);
-        new_local.setAttribute('class', "nav-link-text");
-        var print_name = cue.text;
-        if (print_name == "Bionic Eye"){
-          print_name = "&nbsp;&nbsp;&nbsp;&nbsp;" + print_name;
-        }
-        new_local.innerHTML = print_name;
-        location_list.insertBefore(new_local, location_list.childNodes[0]);
-				new_local.addEventListener("click",
-				  function() {
-            var start_time = this.id;
-            // start_time = start_timereplace(/_id/g, "");
-					  video.currentTime = start_time;
-				  },
-          false
-        );
-      }
+        // Can't do this, because don't want noise to start, immediately.
+        // var play_arg = "";
+        // var current_video = chapter_structure[current_chapter].format_structure[current_format];
+        // if (!current_video.paused)
+        //   play_arg = "&play=1";
 
-      // flashing pixe;
-      var current_cue = cues[1];
-      current_cue.onenter = function() {
-        var video_message = document.getElementById("video_message");
-        video_message.innerHTML = "Once you have noticed the inverting pixel in the brain, proving that for every pixel of knowledge we have, there must be something, physical, that can change and be computationally bound into consciouss awarenss<br><center><b>click continue.</b></center>";
-        continue_selected = false;
-      }
-      current_cue.onexit = function() {
-      var current_cue = cues[1];
-      var skip_repeats = document.getElementById("skip_repeats");
-      if (! skip_repeats.checked && ! continue_selected) {
-        continue_selected = false;
-        // video.controls = false;
-        video.currentTime = current_cue.startTime;
-      } else {
-        var video_message = document.getElementById("video_message");
-        video_message.textContent = "";
-      }
+        var new_location = window.location.href.split("?")[0] + "?chapter=" + this.accessKey + format_arg;
+        window.location.replace(new_location);
+        // next_chapter(this.accessKey);
+      },
+      false
+    );
+  }
 
-      // bionic eye
-      var current_cue = cues[2];
-      current_cue.onenter = function() {
-        var current_cue = cues[2];
-        var skip_indented = document.getElementById("skip_indented");
-        if (skip_indented.checked)
-          video.currentTime = cues[3].startTime;
-      }
 
-      }
-      textTrack.addEventListener("cuechange",
-        function() {
-            if (this.activeCues.length > 0) {
-            var current_location = this.activeCues[0].startTime;
-            if (chapter = document.getElementById(current_location)) {; // + "_id")) {
-              var locations = [].slice.call(document.querySelectorAll("#chapters li"));
-              for (var i = 0; i < locations.length; ++i) { 
-                locations[i].classList.remove("menu-active");  // ("strong-menu-active");
-              }
-              chapter.classList.add("menu-active");  // ("strong-menu-active");
-              // location_list.style.top = "-"+chapter.parentNode.offsetTop+"px";
-          }
-          last_cue_time = current_location;
-         }
-        },false
-      );
 
-      var chapter_val = GetURLParameter("chapter");
-      if (typeof(chapter_val) != "undefined") {
-        if (chapters.hasOwnProperty(chapter_val)) {
-          video.currentTime = chapters[chapter_val];
-        }
-      }
+  // track_element = document.getElementsByTagName("track")[0];
+	// if ((track_element) && (textTrack = track_element.track)){
+	// 	if (textTrack.kind === "chapters"){
+  //     textTrack.mode = 'hidden';
+  //     cues = textTrack.cues;
+	// 		// for (var i = 0; i < textTrack.cues.length; ++i) {
+  //     for (var i = (cues.length - 1); i >= 0; --i) {
+	// 			cue = cues[i];
+	// 			chapter_name = clean_chapter_name(cue.text);
+	// 			start = cue.startTime;
 
-		}
-	}
+  //       chapters[chapter_name] = start;
+
+	// 			new_local = document.createElement("li");
+	// 			new_local.setAttribute('id', start); //  + "_id");
+  //       new_local.setAttribute('accessKey', chapter_name);
+  //       new_local.setAttribute('class', "nav-link-text");
+  //       var print_name = cue.text;
+  //       if (print_name == "Bionic Eye"){
+  //         print_name = "&nbsp;&nbsp;&nbsp;&nbsp;" + print_name;
+  //       }
+  //       new_local.innerHTML = print_name;
+  //       location_list.insertBefore(new_local, location_list.childNodes[0]);
+	// 			new_local.addEventListener("click",
+	// 			  function() {
+  //           var start_time = this.id;
+  //           // start_time = start_timereplace(/_id/g, "");
+	// 				  video.currentTime = start_time;
+	// 			  },
+  //         false
+  //       );
+  //     }
+
+  //     // flashing pixel;
+  //     var current_cue = cues[1];
+  //     current_cue.onenter = function() {
+  //       var video_message = document.getElementById("video_message");
+  //       video_message.innerHTML = "Once you have noticed the inverting pixel in the brain,
+  //               proving that for every pixel of knowledge we have, there must be something, physical, 
+  //               that can change and be computationally bound into consciouss awarenss<br><center><b>click continue.</b></center>";
+  //       continue_selected = false;
+  //     }
+
+  //     current_cue.onexit = function() {
+  //       var current_cue = cues[1];
+  //       var skip_repeats = document.getElementById("skip_repeats");
+  //       if (! skip_repeats.checked && ! continue_selected) {
+  //         continue_selected = false;
+  //         // video.controls = false;
+  //         video.currentTime = current_cue.startTime;
+  //       } else {
+  //         var video_message = document.getElementById("video_message");
+  //         video_message.textContent = "";
+  //       }
+
+  //       // bionic eye
+  //       var current_cue = cues[2];
+  //       current_cue.onenter = function() {
+  //         var current_cue = cues[2];
+  //         var skip_indented = document.getElementById("skip_indented");
+  //         if (skip_indented.checked)
+  //           video.currentTime = cues[3].startTime;
+  //       }
+  //     }
+
+  //     textTrack.addEventListener("cuechange",
+  //       function() {
+  //           if (this.activeCues.length > 0) {
+  //           var current_location = this.activeCues[0].startTime;
+  //           if (chapter = document.getElementById(current_location)) {; // + "_id")) {
+  //             var locations = [].slice.call(document.querySelectorAll("#chapters li"));
+  //             for (var i = 0; i < locations.length; ++i) { 
+  //               locations[i].classList.remove("menu-active");  // ("strong-menu-active");
+  //             }
+  //             chapter.classList.add("menu-active");  // ("strong-menu-active");
+  //             // location_list.style.top = "-"+chapter.parentNode.offsetTop+"px";
+  //         }
+  //         last_cue_time = current_location;
+  //        }
+  //       },false
+  //     );
+
+  //     var chapter_val = GetURLParameter("chapter");
+  //     if (typeof(chapter_val) != "undefined") {
+  //       if (chapters.hasOwnProperty(chapter_val)) {
+  //         video.currentTime = chapters[chapter_val];
+  //       }
+  //     }
+
+	// 	}
+	// }
 }
 
 
@@ -226,7 +383,9 @@ function GetURLParameter(sParam) {
           <img src="https://canonizer.com/img/logo.png" width=146 height=110>
         </a>
       </td>
-      <td width="1030px" style="text-align: center;"><font style="text-align: center;" size=6><b>There&nbsp;is&nbsp;no&nbsp;"hard&nbsp;mind&nbsp;body&nbsp;problem"<br>It's just a color problem</b></font></td>
+      <td width="1030px" style="text-align: center;"><font style="text-align: center;" size=12><b>
+        It's&nbsp;Not&nbsp;a&nbsp;"Hard&nbsp;Mind&nbsp;Body&nbsp;Problem"<br>
+        It's Just an Intrinsic Color Problem</b></font></td>
       <td  style="vertical-align: top;" rowspan="3" >
         <div style="padding: 0.5rem 0 0 1rem;" class="homeADDright">
           <div class="right-addsense">
@@ -244,29 +403,26 @@ function GetURLParameter(sParam) {
     </tr>
     <tr>
       <td style="vertical-align: top;">
-        <figcaption style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" >
+        <figcaption style="margin-top: 10rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" >
           <!---  chapters list is put here:  -->
           <ol style="padding-left: 1rem;" class="uppermenu" id="chapters">
           </ol>
           <!---  chapters list is put above:  -->
 
           <ul style="margin-top: 100px;" class="lowermneu asof">
-            <button class=centered id="continue_button" style="cursor: pointer;" onclick="select_continue();">Continue</button>
-            <div style="margin-left: 20px; margin-top: 10px;">
-              <input style="margin-top: 8px; cursor: pointer;" id="skip_indented" type="checkbox">Skip Indented
+            &nbsp; Video Format:
+            <div style="margin-left: 20px; margin-top: 1px;">
+              <input style="margin-top: 8px; cursor: pointer;" name="format" id="720p" type="radio" onclick="change_chapter(current_chapter, 720)">&nbsp;&nbsp;720 P
             </div>
-            <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 8px;">
-              <input style="margin-top: 8px; cursor: pointer;" id="skip_repeats" type="checkbox">Skip Repeats *
+            <div style="margin-left: 20px; margin-top: 1px; margin-bottom: 1px;">
+              <input style="margin-top: 8px; cursor: pointer;" name="format" id="1080p" type="radio" onclick="change_chapter(current_chapter, 1080)">&nbsp;&nbsp;1080 P
             </div>
           </ul>
         </figcaption>
       </td>
       <td style="text-align: center; background-color: rgb(255, 255, 255)">
-        <div style="display: inline-block; margin-top: 2rem;" >
-          <video controls  id="Conciousness_Video">
-            <source src="Conciousness_Video_V15.mp4">
-            <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>
-          </video>
+        <div style="display: inline-block; margin-left: 2rem; margin-top: 2rem; margin-right: 2rem;" >
+          <div id="multi_video_block"></div>
           <div style="min-height: 100px; margin: 0.5rem 2rem 2rem 2rem;" id=video_message> </div>
         </div>
       </td>
