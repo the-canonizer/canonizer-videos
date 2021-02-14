@@ -83,6 +83,14 @@ $(document).ready(function() {
     current_chapter = chapter_arg;
   }
 
+  current_time = 0;
+  var time_arg = GetURLParameter("t");
+  if (time_arg != undefined) {
+    if ((time_arg > 0) && (time_arg < 5000)) {
+      current_time = time_arg;
+    }
+  }
+  
   // can't do this because don't want sound, if they want to a playing URL.
   // var play_arg = GetURLParameter("play");
   
@@ -90,9 +98,12 @@ $(document).ready(function() {
   // set_video_message("[" + current_chapter + "]" + current_format + " " + JSON.stringify(chapter_structure));
 
   var current_chapter_record = chapter_structure[current_chapter];
-  var current_video = current_chapter_record.format_structure[current_format]
+  var current_video = current_chapter_record.format_structure[current_format];
   current_video.style.display = "block";
+  current_video.currentTime = current_time;
   current_chapter_record.button.classList.add("menu-active");  // ("strong-menu-active");
+
+
 
 
 
@@ -115,6 +126,7 @@ var formats = {
 
 var current_chapter;
 var current_format;
+var current_time;
 
 
 function setup_multi_video_html() {
@@ -124,10 +136,10 @@ function setup_multi_video_html() {
       html +=
       `
       <video controls id="video_${chapter_key+"_"+format}" playsinline>
-         <source src="${chapter_key+"_"+format+".mp4"}">
-       </video>
+        <source src="${chapter_key+"_"+format+".mp4"}">
+        <track id="track_${chapter_key+"_"+format}" kind="chapters" label="Locations" src="${chapter_key + ".vtt"}" srclang="en" default>
+      </video>
       `;
-//         <track kind="chapters" label="Locations" src="Conciousness_Video_V15.vtt" srclang="en" default>
     }
   }
   var multi_video_block = document.getElementById("multi_video_block");
@@ -144,11 +156,28 @@ function setup_chapter_structure() {
     chapter.next_chapter = null;
     var format_structure = {};
     for (var format in formats) {
-      var cur_name = "video_" + chapter_key + "_" + format;
-      var cur_video = document.getElementById(cur_name);
+      var cur_video_name = "video_" + chapter_key + "_" + format;
+      var cur_video = document.getElementById(cur_video_name);
       cur_video.style.display = "none";
       cur_video.addEventListener('ended', function(e) {change_chapter()});
       format_structure[format] = cur_video;
+
+      var cur_track_name = "track_" + chapter_key + "_" + format;
+      var cur_track = document.getElementById(cur_track_name);
+      var text_track;
+      if ((cur_track) && (text_track = cur_track.track)) {
+        text_track.addEventListener("cuechange",
+          function() {
+            if (this.activeCues.length > 0) {
+              var current_cue = this.activeCues[0];
+              var cue_text = current_cue.text;
+              set_video_message(cue_text);
+            } else {
+              set_video_message("");
+            }
+          }, false
+        );
+      }
     }
     chapter.format_structure = format_structure;
     chapter_structure[chapter_key] = chapter;
@@ -192,7 +221,8 @@ function change_chapter(next_chapter, next_format) {
 
 function set_video_message(video_message) {
   var video_message_element = document.getElementById("video_message");
-  video_message_element.textContent = video_message;
+  video_message_element.innerHTML = video_message;
+  // video_message_element.textContent = video_message;
 }
 
 // var multi_video_block = document.getElementById("multi_video_block");
@@ -234,14 +264,17 @@ function setup_chapter_buttons(){
 //    if (print_name == "Bionic Eye"){
 //      print_name = "&nbsp;&nbsp;&nbsp;&nbsp;" + print_name;
 //    }
+    // var format_arg = "";
+    // if (current_format == "1080") format_arg = "&format=1080";
+    // new_li.innerHTML = "<a href=index.html?chapter=" + chapter_key + format_arg +">" + button_name + "</a>";
     new_li.innerHTML = button_name;
     chapter_structure[chapter_key].button = new_li;
     location_list.insertBefore (new_li, null);
     new_li.addEventListener("click",
       function() {
-        var format_arg = "";
-        if (current_format == "1080")
-          format_arg = "&format=1080";
+        // var format_arg = "";
+        // if (current_format == "1080")
+        //   format_arg = "&format=1080";
 
         // Can't do this, because don't want noise to start, immediately.
         // var play_arg = "";
@@ -249,9 +282,9 @@ function setup_chapter_buttons(){
         // if (!current_video.paused)
         //   play_arg = "&play=1";
 
-        var new_location = window.location.href.split("?")[0] + "?chapter=" + this.accessKey + format_arg;
-        window.location.replace(new_location);
-        // next_chapter(this.accessKey);
+        // var new_location = window.location.href.split("?")[0] + "?chapter=" + this.accessKey + format_arg;
+        // window.location.replace(new_location);
+        change_chapter(this.accessKey);
       },
       false
     );
