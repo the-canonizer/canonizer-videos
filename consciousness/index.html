@@ -199,6 +199,7 @@ function change_chapter(next_chapter, next_format) {
   if (next_chapter == null || !current_video.paused)  playing = true;// if we got to the end of the last chapter, we are still playing.
  
   current_video.pause();
+  set_video_message("");  // clear any message left up when we changed chapters.
 
   if (next_chapter == null) {
       next_chapter  = current_chapter_record.next_chapter;
