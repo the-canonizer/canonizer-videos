@@ -1,1 +1,1 @@
-"c:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-file-access-from-files "C:\Users\Owner\Google Drive\Canonizer\canonizer-videos\consciousness\index.html
+"C:\Program Files\Google\Chrome\Application\chrome.exe" --allow-file-access-from-files "C:\gitrepositories\canonizer-videos\consciousness\index.html
