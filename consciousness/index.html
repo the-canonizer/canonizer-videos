@@ -211,11 +211,11 @@ function change_chapter(next_chapter, next_format) {
     if (playing) {
       next_video.play();
     }
-    current_video.style.display = "none";
     current_chapter_record.button.classList.remove("menu-active");  // ("strong-menu-active");
-    next_video.style.display    = "block";
     next_chapter_record.button.classList.add("menu-active");  // ("strong-menu-active");
     current_chapter = next_chapter;
+    next_video.style.display    = "block"; // these need to be last, and in this order, to avoid flashing of the preview.
+    current_video.style.display = "none";
   }
 }
 
