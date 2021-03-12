@@ -1,4 +1,10 @@
+
+
+
+
 <!doctype html>
+
+
 
 <!-- source: https://thenewcode.com/977/Create-Interactive-HTML5-Video-with-WebVTT-Chapters -->
 
@@ -37,6 +43,14 @@
 
 $(document).ready(function() {
 
+//////////////////////////////////////
+// Steps to add/change Format set.
+// 1. Update the format selections html elements: id="360p"
+//
+//
+//////////////////////////////////////
+
+
   // set copyright end year
   var year_span = document.getElementById("copyright_year");
   var d = new Date();
@@ -63,14 +77,17 @@ $(document).ready(function() {
   
 
   // format argument
-  current_format = "720";
+  current_format = "360";
   var format_arg = GetURLParameter("format");
   if (formats[format_arg] != undefined) {
     current_format = format_arg;
   }
+  var input_360p  = document.getElementById("360p" );
   var input_720p  = document.getElementById("720p" );
   var input_1080p = document.getElementById("1080p");
-  if (current_format == "720"){
+  if (current_format == "360") {
+    input_360p.checked = true;
+  } else if (current_format == "720") {
     input_720p.checked = true;
   } else {
     input_1080p.checked = true;
@@ -120,6 +137,7 @@ var chapter_specs = {
 
 
 var formats = {
+  "360"  : 1,
   "720"  : 1,
   "1080" : 1
 };
@@ -225,9 +243,6 @@ function set_video_message(video_message) {
   video_message_element.innerHTML = video_message;
   // video_message_element.textContent = video_message;
 }
-
-// var multi_video_block = document.getElementById("multi_video_block");
-// multi_video_block.innerHTML = "<b>Hello</b>"; // chapter_structure;
 
 
 ///////////////////////////////
@@ -417,10 +432,10 @@ function GetURLParameter(sParam) {
           <img src="https://canonizer.com/img/logo.png" width=146 height=110>
         </a>
       </td>
-      <td width="1030px" style="text-align: center;"><font style="text-align: center;" size=12><b>
-        Consciousness: Not a Hard Problem<br>Just a Color Problem
+      <td style="text-align: center;"><font style="text-align: center;" size=12><b>
+        Consciousness: Not&nbsp;a&nbsp;Hard&nbsp;Problem<br>Just a Color Problem
       </b></font></td>
-      <td  style="vertical-align: top;" rowspan="3" >
+      <td width="150px" style="vertical-align: top;" rowspan="3" >
         <div style="padding: 0.5rem 0 0 1rem;" class="homeADDright">
           <div class="right-addsense">
             <script type="text/javascript">
@@ -446,6 +461,9 @@ function GetURLParameter(sParam) {
           <ul style="margin-top: 100px;" class="lowermneu asof">
             &nbsp; Video Format:
             <div style="margin-left: 20px; margin-top: 1px;">
+              <input style="margin-top: 8px; cursor: pointer;" name="format" id="360p" type="radio" onclick="change_chapter(current_chapter, 360)">&nbsp;&nbsp;360 P
+            </div>
+            <div style="margin-left: 20px; margin-top: 1px;">
               <input style="margin-top: 8px; cursor: pointer;" name="format" id="720p" type="radio" onclick="change_chapter(current_chapter, 720)">&nbsp;&nbsp;720 P
             </div>
             <div style="margin-left: 20px; margin-top: 1px; margin-bottom: 1px;">
@@ -454,9 +472,9 @@ function GetURLParameter(sParam) {
           </ul>
         </figcaption>
       </td>
-      <td style="text-align: center; background-color: rgb(255, 255, 255)">
-        <div style="display: inline-block; margin-left: 2rem; margin-top: 2rem; margin-right: 2rem;" >
-          <div style="border:1px" id="multi_video_block"></div>
+      <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 255)">
+        <div style="margin-left: 2rem; margin-top: 2rem; margin-right: 2rem;" >
+          <div style="width: 100%; height: auto; border:1px; box-sizing: border-box;" id="multi_video_block"></div>
           <div style="min-height: 100px; margin: 0.5rem 2rem 2rem 2rem;" id=video_message> </div>
         </div>
       </td>
@@ -534,7 +552,11 @@ function GetURLParameter(sParam) {
   background-color: #ffefd2; /* #f6efe2  -webkit-linear-gradient(left, #ffefd2 , #eeeff3); */
 }
 
-
+video {
+  /* override other styles to make responsive */
+  width: 100%    !important;
+  height: auto   !important;
+}
 
 
 a.down {
