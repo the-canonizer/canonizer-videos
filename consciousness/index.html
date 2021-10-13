@@ -110,6 +110,7 @@ $(document).ready(function() {
 
   // set_video_message("[" + current_chapter + "]" + current_format + " " + JSON.stringify(chapter_structure));
 
+  AddSrcToVideo(current_chapter , current_format); //adding source to the video when the page loads
   var current_chapter_record = chapter_structure[current_chapter];
   var current_video = current_chapter_record.format_structure[current_format];
   current_video.style.display = "block";
@@ -149,7 +150,7 @@ function setup_multi_video_html() {
       html +=
       `
       <video controls id="video_${chapter_key+"_"+format}" playsinline>
-        <source src="${chapter_key+"_"+format+".mp4"}">
+        <source id="source_${chapter_key+"_"+format}" src="">
         <track id="track_${chapter_key+"_"+format}" kind="chapters" label="Locations" src="${chapter_key + ".vtt"}" srclang="en" default>
       </video>
       `;
@@ -221,6 +222,8 @@ function change_chapter(next_chapter, next_format) {
     var next_chapter_record = chapter_structure[next_chapter];
     var next_video          = next_chapter_record.format_structure[current_format];
     next_video.currentTime = 0;
+    AddSrcToVideo(next_chapter , next_format); // Adding the source of the next video
+    next_video.load(); // loading the newly added link
     if (playing) {
       next_video.play();
     }
@@ -295,7 +298,7 @@ function setup_chapter_buttons(){
 
         // var new_location = window.location.href.split("?")[0] + "?chapter=" + this.accessKey + format_arg;
         // window.location.replace(new_location);
-        change_chapter(this.accessKey);
+        change_chapter(this.accessKey,current_format);
       },
       false
     );
@@ -414,6 +417,15 @@ function GetURLParameter(sParam) {
   }
 }
 
+ // Adding source to the video on run time to reduce the number calls to load the videos
+function AddSrcToVideo(chapter_name, chapter_format) {
+  if(!chapter_format){
+    chapter_format = current_format;
+  }
+  let video_src_id = "source_"+chapter_name+"_"+chapter_format;
+  let video_src = document.getElementById(video_src_id);
+  video_src.src = chapter_name+"_"+chapter_format+".mp4";
+}
 
 </script>
 </head>
