@@ -149,7 +149,7 @@ function setup_multi_video_html() {
     for (var format in formats) {
       html +=
       `
-      <video controls id="video_${chapter_key+"_"+format}" playsinline>
+      <video controls class="consciousness" id="video_${chapter_key+"_"+format}" playsinline>
         <source id="source_${chapter_key+"_"+format}" src="">
         <track id="track_${chapter_key+"_"+format}" kind="chapters" label="Locations" src="${chapter_key + ".vtt"}" srclang="en" default>
       </video>
@@ -230,8 +230,14 @@ function change_chapter(next_chapter, next_format) {
     current_chapter_record.button.classList.remove("menu-active");  // ("strong-menu-active");
     next_chapter_record.button.classList.add("menu-active");  // ("strong-menu-active");
     current_chapter = next_chapter;
-    next_video.style.display    = "block"; // these need to be last, and in this order, to avoid flashing of the preview.
-    current_video.style.display = "none";
+
+    // current video is equal to next video dont hide the and display the div
+    // Hide the CUrrent Video
+    // Display the next video
+    if(next_video.id != current_video.id){
+      next_video.style.display    = "block"; // these need to be last, and in this order, to avoid flashing of the preview.
+      current_video.style.display = "none"; 
+    }
   }
 }
 
@@ -572,6 +578,12 @@ a.down {
   border-left: solid 2px #777;
   border-bottom: solid 2px #eaeaea;
   border-right: solid 2px #eaeaea;
+}
+.consciousness {
+    /* width: 100%; */
+    /* max-width: 700px; */
+    margin: 0 auto;
+    height: 108vh !important;
 }
 </style>
 
