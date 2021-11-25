@@ -110,6 +110,7 @@ $(document).ready(function() {
 
   // set_video_message("[" + current_chapter + "]" + current_format + " " + JSON.stringify(chapter_structure));
 
+  AddSrcToVideo(current_chapter , current_format); //adding source to the video when the page loads
   var current_chapter_record = chapter_structure[current_chapter];
   var current_video = current_chapter_record.format_structure[current_format];
   current_video.style.display = "block";
@@ -148,8 +149,8 @@ function setup_multi_video_html() {
     for (var format in formats) {
       html +=
       `
-      <video controls id="video_${chapter_key+"_"+format}" playsinline>
-        <source src="${chapter_key+"_"+format+".mp4"}">
+      <video controls class="consciousness" id="video_${chapter_key+"_"+format}" playsinline>
+        <source id="source_${chapter_key+"_"+format}" src="">
         <track id="track_${chapter_key+"_"+format}" kind="chapters" label="Locations" src="${chapter_key + ".vtt"}" srclang="en" default>
       </video>
       `;
@@ -221,14 +222,22 @@ function change_chapter(next_chapter, next_format) {
     var next_chapter_record = chapter_structure[next_chapter];
     var next_video          = next_chapter_record.format_structure[current_format];
     next_video.currentTime = 0;
+    AddSrcToVideo(next_chapter , next_format); // Adding the source of the next video
+    next_video.load(); // loading the newly added link
     if (playing) {
       next_video.play();
     }
     current_chapter_record.button.classList.remove("menu-active");  // ("strong-menu-active");
     next_chapter_record.button.classList.add("menu-active");  // ("strong-menu-active");
     current_chapter = next_chapter;
-    next_video.style.display    = "block"; // these need to be last, and in this order, to avoid flashing of the preview.
-    current_video.style.display = "none";
+
+    // current video is equal to next video dont hide the and display the div
+    // Hide the CUrrent Video
+    // Display the next video
+    if(next_video.id != current_video.id){
+      next_video.style.display    = "block"; // these need to be last, and in this order, to avoid flashing of the preview.
+      current_video.style.display = "none"; 
+    }
   }
 }
 
@@ -295,7 +304,7 @@ function setup_chapter_buttons(){
 
         // var new_location = window.location.href.split("?")[0] + "?chapter=" + this.accessKey + format_arg;
         // window.location.replace(new_location);
-        change_chapter(this.accessKey);
+        change_chapter(this.accessKey,current_format);
       },
       false
     );
@@ -414,6 +423,15 @@ function GetURLParameter(sParam) {
   }
 }
 
+ // Adding source to the video on run time to reduce the number calls to load the videos
+function AddSrcToVideo(chapter_name, chapter_format) {
+  if(!chapter_format){
+    chapter_format = current_format;
+  }
+  let video_src_id = "source_"+chapter_name+"_"+chapter_format;
+  let video_src = document.getElementById(video_src_id);
+  video_src.src = chapter_name+"_"+chapter_format+".mp4";
+}
 
 </script>
 </head>
@@ -560,6 +578,12 @@ a.down {
   border-left: solid 2px #777;
   border-bottom: solid 2px #eaeaea;
   border-right: solid 2px #eaeaea;
+}
+.consciousness {
+    /* width: 100%; */
+    /* max-width: 700px; */
+    margin: 0 auto;
+    /* height: 60vh !important; */
 }
 </style>
 
