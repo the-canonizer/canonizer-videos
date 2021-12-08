@@ -1,0 +1,592 @@
+<!doctype html>
+
+
+
+<!-- source: https://thenewcode.com/977/Create-Interactive-HTML5-Video-with-WebVTT-Chapters -->
+
+<!-- source: https://hacks.mozilla.org/2014/08/building-interactive-html5-videos/ -->
+<html>
+<head>
+<!--script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></!--script -->
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="kVt9nhopql6ohpyCJ9uTDHm24i7qiQoNwOaWy3cw">
+<title>Canonizer</title>
+
+<!-- Fonts -->
+<!-- link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css" -->
+
+<!-- Bootstrap core CSS-->
+<link href="https://canonizer.com/css/bootstrap.min.css" rel="stylesheet">
+<!-- Custom fonts for this template-->
+<link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<!-- Custom styles for this template-->
+<link href="https://canonizer.com/css/canonizer.css" rel="stylesheet">
+
+<!-- jquery  -->
+<script src="https://canonizer.com/js/jquery.min.js"></script>
+<script src="https://canonizer.com/js/jquery.min.js"></script>
+<script src="https://canonizer.com/js/jquery-ui/jquery-ui.js"></script>
+<link href="https://canonizer.com/js/jquery-ui/jquery-ui.css" rel="stylesheet" type="text/css">
+
+<!--countdown timers -->
+<script src="https://canonizer.com/js/jquery.countdownTimer.min.js"></script>
+<link href="https://canonizer.com/css/jquery.countdownTimer.css" rel="stylesheet" type="text/css">
+
+<script>
+
+$(document).ready(function() {
+
+//////////////////////////////////////
+// Steps to add/change Format set.
+// 1. Update the format selections html elements: id="360p"
+// 2. fix these lines: var input_360p  = document.getElementById("360p" );
+// 3. and the references to them.
+//////////////////////////////////////
+
+
+  // set copyright end year
+  var year_span = document.getElementById("copyright_year");
+  var d = new Date();
+  var n = d.getFullYear();
+  year_span.innerHTML = n;
+
+
+  $('a#continue_button').click(function() {
+    $(this).toggleClass("down");
+  });
+
+/////////////////// new stuff starts here ///////////////////////
+// some of this stuff is taken from the
+// "Try with setting the display to block and none:" answer on stack overflow:
+// https://stackoverflow.com/questions/52514522/html5-video-how-to-seamlessly-play-several-videos-and-then-loop-the-sequence
+/////////////////////////////////////////////////////////////////
+
+  // var first_vid = document.getElementById("introduction_1024");
+  // first_vid.style.display = "none";
+
+  setup_multi_video_html();
+  setup_chapter_structure();
+  setup_chapter_buttons();
+  
+
+  // format argument
+  current_format = "360";
+  var format_arg = GetURLParameter("format");
+  if (formats[format_arg] != undefined) {
+    current_format = format_arg;
+  }
+  var input_360p  = document.getElementById("360p" );
+  var input_720p  = document.getElementById("720p" );
+  var input_1080p = document.getElementById("1080p");
+  if (current_format == "360") {
+    input_360p.checked = true;
+  } else if (current_format == "720") {
+    input_720p.checked = true;
+  } else {
+    input_1080p.checked = true;
+  }
+
+  // chapter argument
+  current_chapter = "introduction";
+  var chapter_arg = GetURLParameter("chapter");
+  if (chapter_specs[chapter_arg] != undefined) {
+    current_chapter = chapter_arg;
+  }
+
+  current_time = 0;
+  var time_arg = GetURLParameter("t");
+  if (time_arg != undefined) {
+    if ((time_arg > 0) && (time_arg < 5000)) {
+      current_time = time_arg;
+    }
+  }
+  
+  // can't do this because don't want sound, if they want to a playing URL.
+  // var play_arg = GetURLParameter("play");
+  
+
+  // set_video_message("[" + current_chapter + "]" + current_format + " " + JSON.stringify(chapter_structure));
+
+  AddSrcToVideo(current_chapter , current_format); //adding source to the video when the page loads
+  var current_chapter_record = chapter_structure[current_chapter];
+  var current_video = current_chapter_record.format_structure[current_format];
+  current_video.style.display = "block";
+  current_video.currentTime = current_time;
+  current_chapter_record.button.classList.add("menu-active");  // ("strong-menu-active");
+
+});
+
+// key : button name
+var chapter_specs = {
+  "introduction"                      : "Introduction",
+  "perceiving_a_strawberry"           : "Perceiving a Strawberry",
+  "differentiate_reality_knowledge"   : "Differentiating Reality and Knowledge of Reality",
+  "computational_binding"             : "Computational Binding",
+  "cognitive_knowledge"               : "Cognitive Knowledge",
+  "simulation_hypothesis"             : "Simulation_Hypothesis",
+  "representational_qualia_consensus" : "Representational Qualia Theory Consensus",
+  "conclusion"                        : "Conclusion"
+};
+
+
+var formats = {
+  "360"  : 1,
+  "720"  : 1,
+  "1080" : 1
+};
+
+var current_chapter;
+var current_format;
+var current_time;
+
+
+function setup_multi_video_html() {
+  var html = "";
+  for (chapter_key in chapter_specs) {
+    for (var format in formats) {
+      html +=
+      `
+      <video controls class="consciousness" id="video_${chapter_key+"_"+format}" playsinline>
+        <source id="source_${chapter_key+"_"+format}" src="">
+        <track id="track_${chapter_key+"_"+format}" kind="chapters" label="Locations" src="${chapter_key + ".vtt"}" srclang="en" default>
+      </video>
+      `;
+    }
+  }
+  var multi_video_block = document.getElementById("multi_video_block");
+  multi_video_block.innerHTML = html;
+}
+
+
+var chapter_structure;
+function setup_chapter_structure() {
+  chapter_structure = {};
+  last_chapter = null;
+  for (chapter_key in chapter_specs) {
+    chapter = new Object();
+    chapter.next_chapter = null;
+    var format_structure = {};
+    for (var format in formats) {
+      var cur_video_name = "video_" + chapter_key + "_" + format;
+      var cur_video = document.getElementById(cur_video_name);
+      cur_video.style.display = "none";
+      cur_video.addEventListener('ended', function(e) {change_chapter()});
+      format_structure[format] = cur_video;
+
+      var cur_track_name = "track_" + chapter_key + "_" + format;
+      var cur_track = document.getElementById(cur_track_name);
+      var text_track;
+      if ((cur_track) && (text_track = cur_track.track)) {
+        text_track.addEventListener("cuechange",
+          function() {
+            if (this.activeCues.length > 0) {
+              var current_cue = this.activeCues[0];
+              var cue_text = current_cue.text;
+              set_video_message(cue_text);
+            } else {
+              set_video_message("");
+            }
+          }, false
+        );
+      }
+    }
+    chapter.format_structure = format_structure;
+    chapter_structure[chapter_key] = chapter;
+    if (last_chapter != null) {
+      last_chapter.next_chapter = chapter_key;
+    }
+    last_chapter = chapter;
+  }
+}
+
+
+function change_chapter(next_chapter, next_format) {
+  var current_chapter_record = chapter_structure[current_chapter];
+  var current_video = current_chapter_record.format_structure[current_format];
+
+  if (next_format != null) current_format = next_format;
+
+  var playing = false;
+  if (next_chapter == null || !current_video.paused)  playing = true;// if we got to the end of the last chapter, we are still playing.
+ 
+  current_video.pause();
+  set_video_message("");  // clear any message left up when we changed chapters.
+
+  if (next_chapter == null) {
+      next_chapter  = current_chapter_record.next_chapter;
+  }
+  if (next_chapter != null) {
+    var next_chapter_record = chapter_structure[next_chapter];
+    var next_video          = next_chapter_record.format_structure[current_format];
+    next_video.currentTime = 0;
+    AddSrcToVideo(next_chapter , next_format); // Adding the source of the next video
+    next_video.load(); // loading the newly added link
+    if (playing) {
+      next_video.play();
+    }
+    current_chapter_record.button.classList.remove("menu-active");  // ("strong-menu-active");
+    next_chapter_record.button.classList.add("menu-active");  // ("strong-menu-active");
+    current_chapter = next_chapter;
+
+    // current video is equal to next video dont hide the and display the div
+    // Hide the CUrrent Video
+    // Display the next video
+    if(next_video.id != current_video.id){
+      next_video.style.display    = "block"; // these need to be last, and in this order, to avoid flashing of the preview.
+      current_video.style.display = "none"; 
+    }
+  }
+}
+
+
+function set_video_message(video_message) {
+  var video_message_element = document.getElementById("video_message");
+  video_message_element.innerHTML = video_message;
+  // video_message_element.textContent = video_message;
+}
+
+
+///////////////////////////////
+// end new stuff
+///////////////////////////////
+
+var last_cue_time = 0;
+var continue_selected = false;
+var cues = [];
+
+
+function select_continue(){
+  continue_selected = true;
+  var video_message = document.getElementById("video_message");
+  video_message.textContent = "";
+}
+
+function clean_chapter_name(name) {
+  name = name.replace(/\*/g, "");
+  name = name.trim();  // remove leading and trailing white space.
+  name = name.replace(/ /g, "_");
+  name = name.toLowerCase();
+  return(name);
+}
+
+
+function setup_chapter_buttons(){
+  var location_list = document.getElementById("chapters");
+  for (chapter_key in chapter_specs) {
+		new_li = document.createElement("li");
+		new_li.setAttribute('id', chapter_key + "_li"); //  + "_id");
+    new_li.setAttribute('accessKey', chapter_key);
+    new_li.setAttribute('class', "nav-link-text");
+    var button_name = chapter_specs[chapter_key];
+//    if (print_name == "Bionic Eye"){
+//      print_name = "&nbsp;&nbsp;&nbsp;&nbsp;" + print_name;
+//    }
+    // var format_arg = "";
+    // if (current_format == "1080") format_arg = "&format=1080";
+    // new_li.innerHTML = "<a href=index.html?chapter=" + chapter_key + format_arg +">" + button_name + "</a>";
+    new_li.innerHTML = button_name;
+    chapter_structure[chapter_key].button = new_li;
+    location_list.insertBefore (new_li, null);
+    new_li.addEventListener("click",
+      function() {
+        // var format_arg = "";
+        // if (current_format == "1080")
+        //   format_arg = "&format=1080";
+
+        // Can't do this, because don't want noise to start, immediately.
+        // var play_arg = "";
+        // var current_video = chapter_structure[current_chapter].format_structure[current_format];
+        // if (!current_video.paused)
+        //   play_arg = "&play=1";
+
+        // var new_location = window.location.href.split("?")[0] + "?chapter=" + this.accessKey + format_arg;
+        // window.location.replace(new_location);
+        change_chapter(this.accessKey,current_format);
+      },
+      false
+    );
+  }
+
+
+
+  // track_element = document.getElementsByTagName("track")[0];
+	// if ((track_element) && (textTrack = track_element.track)){
+	// 	if (textTrack.kind === "chapters"){
+  //     textTrack.mode = 'hidden';
+  //     cues = textTrack.cues;
+	// 		// for (var i = 0; i < textTrack.cues.length; ++i) {
+  //     for (var i = (cues.length - 1); i >= 0; --i) {
+	// 			cue = cues[i];
+	// 			chapter_name = clean_chapter_name(cue.text);
+	// 			start = cue.startTime;
+
+  //       chapters[chapter_name] = start;
+
+	// 			new_local = document.createElement("li");
+	// 			new_local.setAttribute('id', start); //  + "_id");
+  //       new_local.setAttribute('accessKey', chapter_name);
+  //       new_local.setAttribute('class', "nav-link-text");
+  //       var print_name = cue.text;
+  //       if (print_name == "Bionic Eye"){
+  //         print_name = "&nbsp;&nbsp;&nbsp;&nbsp;" + print_name;
+  //       }
+  //       new_local.innerHTML = print_name;
+  //       location_list.insertBefore(new_local, location_list.childNodes[0]);
+	// 			new_local.addEventListener("click",
+	// 			  function() {
+  //           var start_time = this.id;
+  //           // start_time = start_timereplace(/_id/g, "");
+	// 				  video.currentTime = start_time;
+	// 			  },
+  //         false
+  //       );
+  //     }
+
+  //     // flashing pixel;
+  //     var current_cue = cues[1];
+  //     current_cue.onenter = function() {
+  //       var video_message = document.getElementById("video_message");
+  //       video_message.innerHTML = "Once you have noticed the inverting pixel in the brain,
+  //               proving that for every pixel of knowledge we have, there must be something, physical, 
+  //               that can change and be computationally bound into consciouss awarenss<br><center><b>click continue.</b></center>";
+  //       continue_selected = false;
+  //     }
+
+  //     current_cue.onexit = function() {
+  //       var current_cue = cues[1];
+  //       var skip_repeats = document.getElementById("skip_repeats");
+  //       if (! skip_repeats.checked && ! continue_selected) {
+  //         continue_selected = false;
+  //         // video.controls = false;
+  //         video.currentTime = current_cue.startTime;
+  //       } else {
+  //         var video_message = document.getElementById("video_message");
+  //         video_message.textContent = "";
+  //       }
+
+  //       // bionic eye
+  //       var current_cue = cues[2];
+  //       current_cue.onenter = function() {
+  //         var current_cue = cues[2];
+  //         var skip_indented = document.getElementById("skip_indented");
+  //         if (skip_indented.checked)
+  //           video.currentTime = cues[3].startTime;
+  //       }
+  //     }
+
+  //     textTrack.addEventListener("cuechange",
+  //       function() {
+  //           if (this.activeCues.length > 0) {
+  //           var current_location = this.activeCues[0].startTime;
+  //           if (chapter = document.getElementById(current_location)) {; // + "_id")) {
+  //             var locations = [].slice.call(document.querySelectorAll("#chapters li"));
+  //             for (var i = 0; i < locations.length; ++i) { 
+  //               locations[i].classList.remove("menu-active");  // ("strong-menu-active");
+  //             }
+  //             chapter.classList.add("menu-active");  // ("strong-menu-active");
+  //             // location_list.style.top = "-"+chapter.parentNode.offsetTop+"px";
+  //         }
+  //         last_cue_time = current_location;
+  //        }
+  //       },false
+  //     );
+
+  //     var chapter_val = GetURLParameter("chapter");
+  //     if (typeof(chapter_val) != "undefined") {
+  //       if (chapters.hasOwnProperty(chapter_val)) {
+  //         video.currentTime = chapters[chapter_val];
+  //       }
+  //     }
+
+	// 	}
+	// }
+}
+
+
+// this was stolen from: http://www.jquerybyexample.net/2012/06/get-url-parameters-using-jquery.html
+// I made it case insensative.  (all lower case)
+// var tech = GetURLParameter('technology');
+// var blog = GetURLParameter('blog');
+function GetURLParameter(sParam) {
+  var sPageURL = window.location.search.substring(1);
+  var sURLVariables = sPageURL.split('&');
+  sParam = sParam.toLowerCase();
+  for (var i = 0; i < sURLVariables.length; i++) {
+    var sParameterName = sURLVariables[i].split('=');
+    sParameterName[0] = sParameterName[0].toLocaleLowerCase();
+    if (sParameterName[0] == sParam) {
+      return sParameterName[1].toLocaleLowerCase();
+    }
+  }
+}
+
+ // Adding source to the video on run time to reduce the number calls to load the videos
+function AddSrcToVideo(chapter_name, chapter_format) {
+  if(!chapter_format){
+    chapter_format = current_format;
+  }
+  let video_src_id = "source_"+chapter_name+"_"+chapter_format;
+  let video_src = document.getElementById(video_src_id);
+  video_src.src = chapter_name+"_"+chapter_format+".mp4";
+}
+
+</script>
+</head>
+
+<body>
+
+  <table width=100%>
+    <tr>
+      <td width="250px">
+        <a style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" class="navbar-brand" href="https://canonizer.com">
+          <img src="https://canonizer.com/img/logo.png" width=146 height=110>
+        </a>
+      </td>
+      <td style="text-align: center;"><font style="text-align: center;" size=12><b>
+        Consciousness: Not a Hard Problem, Just a Color Problem
+      </b></font></td>
+      <td width="150px" style="vertical-align: top;" rowspan="3" >
+        <div style="padding: 0.5rem 0 0 1rem;" class="homeADDright">
+          <div class="right-addsense">
+            <script type="text/javascript">
+                google_ad_client = "pub-6646446076038181";
+                //120x600, right bar
+                google_ad_slot = "5819006657";
+                google_ad_width = 115;
+                google_ad_height = 600;
+            </script>
+            <script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+        <figcaption style="margin-top: 10rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" >
+          <!---  chapters list is put here:  -->
+          <ol style="padding-left: 1rem;" class="uppermenu" id="chapters">
+          </ol>
+          <!---  chapters list is put above:  -->
+
+          <ul style="margin-top: 100px;" class="lowermneu asof">
+            &nbsp; Video Format:
+            <div style="margin-left: 20px; margin-top: 1px;">
+              <input style="margin-top: 8px; cursor: pointer;" name="format" id="360p" type="radio" onclick="change_chapter(current_chapter, 360)">&nbsp;&nbsp;360 P
+            </div>
+            <div style="margin-left: 20px; margin-top: 1px;">
+              <input style="margin-top: 8px; cursor: pointer;" name="format" id="720p" type="radio" onclick="change_chapter(current_chapter, 720)">&nbsp;&nbsp;720 P
+            </div>
+            <div style="margin-left: 20px; margin-top: 1px; margin-bottom: 1px;">
+              <input style="margin-top: 8px; cursor: pointer;" name="format" id="1080p" type="radio" onclick="change_chapter(current_chapter, 1080)">&nbsp;&nbsp;1080 P
+            </div>
+          </ul>
+        </figcaption>
+      </td>
+      <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 255)">
+        <div style="margin-left: 2rem; margin-top: 2rem; margin-right: 2rem;" >
+          <div style="width: 100%; height: auto; border:1px; box-sizing: border-box;" id="multi_video_block"></div>
+          <div style="min-height: 100px; margin: 0.5rem 2rem 2rem 2rem;" id=video_message> </div>
+        </div>
+      </td>
+    </tr>
+    <tr >
+      <td></td><td ></td>
+    </tr>
+  </table>
+  <footer class="sticky-footer">
+    <div class="container">
+        <div class="row">
+            <!--<div class="col-sm-4 pd-l-0"><span>Sponsers: &nbsp;&nbsp; <img src="img/mta-thumb.png"/></span></div>-->
+            <div class="col-sm-12 text-center">
+                <small>Copyright owned by the volunteers contributing to the system and its contents (2006 - <span id=copyright_year></span>)</small>
+                <small>Comments and Questions: support@canonizer.com</small>
+	              <small><a href="{{url('privacypolicy')}}">Privacy Policy</a> | Pattent: US 8,160,970 B2 | <a href="{{url('termservice')}}">Terms & Services</a></small>
+            </div>
+        </div>
+    </div>
+  </footer>
+
+
+</body>
+
+<style>
+.centered {
+    display: block;
+    margin-left: auto;
+    margin-top: 4px;
+    margin-right: auto }
+
+  figure {
+    font-size: 0;
+    position: relative;
+    background: #000;
+  }
+  figure video {
+    width: 75%;
+    height: auto;
+    display: inline-block;
+  }
+  figure figcaption {
+    position: absolute;
+    right: 0; top: 0;
+    background: rgb(245, 245, 245);
+    width: 25%;
+    font-size: .8rem;
+    color: #666;
+    height: 100%;
+    overflow-y: scroll;
+  }
+  figure figcaption ol {
+    position: relative;
+    list-style-type: none;
+    margin: 0; padding: 0;
+  }
+  figure figcaption ol li {
+    padding: .7rem 1rem;
+    border-bottom: 1px dashed #000;
+    transition: .3s;
+  }
+  .current {
+    background: hsl(45,80%,50%);
+    color: #000;
+  }
+
+  li {
+    color: rgb(0, 0, 255);
+    cursor: pointer;
+  }
+
+.strong-menu-active {
+  font-weight:600;
+  color: #00E060	;   /* #00b050	; #10e410	 ; #1cb41c	; */
+  background-color: #ffefd2; /* #f6efe2  -webkit-linear-gradient(left, #ffefd2 , #eeeff3); */
+}
+
+video {
+  /* override other styles to make responsive */
+  width: 100%    !important;
+  height: auto   !important;
+}
+
+
+a.down {
+  background: #bbb;
+  border-top: solid 2px #777;
+  border-left: solid 2px #777;
+  border-bottom: solid 2px #eaeaea;
+  border-right: solid 2px #eaeaea;
+}
+.consciousness {
+    /* width: 100%; */
+    /* max-width: 700px; */
+    margin: 0 auto;
+    /* height: 60vh !important; */
+}
+</style>
+
+</html>
+
+

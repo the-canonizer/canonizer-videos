@@ -24,6 +24,7 @@
 <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <!-- Custom styles for this template-->
 <link href="https://canonizer.com/css/canonizer.css" rel="stylesheet">
+<link href="assets/css/canonizer-2021.css" rel="stylesheet">
 
 <!-- jquery  -->
 <script src="https://canonizer.com/js/jquery.min.js"></script>
@@ -438,155 +439,71 @@ function AddSrcToVideo(chapter_name, chapter_format) {
 
 <body>
 
-  <table width=100%>
-    <tr>
-      <td width="250px">
-        <a style="margin-top: 0.5rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" class="navbar-brand" href="https://canonizer.com">
-          <img src="https://canonizer.com/img/logo.png" width=146 height=110>
-        </a>
-      </td>
-      <td style="text-align: center;"><font style="text-align: center;" size=12><b>
-        Consciousness: Not a Hard Problem, Just a Color Problem
-      </b></font></td>
-      <td width="150px" style="vertical-align: top;" rowspan="3" >
-        <div style="padding: 0.5rem 0 0 1rem;" class="homeADDright">
-          <div class="right-addsense">
-            <script type="text/javascript">
-                google_ad_client = "pub-6646446076038181";
-                //120x600, right bar
-                google_ad_slot = "5819006657";
-                google_ad_width = 115;
-                google_ad_height = 600;
-            </script>
-            <script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-        <figcaption style="margin-top: 10rem; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;" >
-          <!---  chapters list is put here:  -->
-          <ol style="padding-left: 1rem;" class="uppermenu" id="chapters">
-          </ol>
-          <!---  chapters list is put above:  -->
+  <header class="page-header">
+    <div class="site-logo">
+      <a href="https://canonizer.com">
+        <img src="https://canonizer.com/img/logo.png" width=146 height=110>
+      </a>
+    </div>
+    <div class="page-title">
+      <h1>Consciousness: Not a Hard Problem, Just a Color Problem</h1>
+    </div>
+  </header>
 
-          <ul style="margin-top: 100px;" class="lowermneu asof">
-            &nbsp; Video Format:
-            <div style="margin-left: 20px; margin-top: 1px;">
-              <input style="margin-top: 8px; cursor: pointer;" name="format" id="360p" type="radio" onclick="change_chapter(current_chapter, 360)">&nbsp;&nbsp;360 P
-            </div>
-            <div style="margin-left: 20px; margin-top: 1px;">
-              <input style="margin-top: 8px; cursor: pointer;" name="format" id="720p" type="radio" onclick="change_chapter(current_chapter, 720)">&nbsp;&nbsp;720 P
-            </div>
-            <div style="margin-left: 20px; margin-top: 1px; margin-bottom: 1px;">
-              <input style="margin-top: 8px; cursor: pointer;" name="format" id="1080p" type="radio" onclick="change_chapter(current_chapter, 1080)">&nbsp;&nbsp;1080 P
-            </div>
-          </ul>
-        </figcaption>
-      </td>
-      <td style="vertical-align: top; text-align: center; background-color: rgb(255, 255, 255)">
-        <div style="margin-left: 2rem; margin-top: 2rem; margin-right: 2rem;" >
-          <div style="width: 100%; height: auto; border:1px; box-sizing: border-box;" id="multi_video_block"></div>
-          <div style="min-height: 100px; margin: 0.5rem 2rem 2rem 2rem;" id=video_message> </div>
+  <div class="page-content-wrap">
+
+    <div class="page-left-sidebar">
+      <!---  chapters list is put here:  -->
+      <ol class="uppermenu" id="chapters">
+      </ol>
+      <!---  chapters list is put above:  -->
+      <ul class="lowermneu asof">
+        <li class="format-heading">Video Format:</li>
+        <li>
+          <input style="margin-top: 8px; cursor: pointer;" name="format" id="360p" type="radio" onclick="change_chapter(current_chapter, 360)">&nbsp;&nbsp;360 P
+        </li>
+        <li>
+          <input style="margin-top: 8px; cursor: pointer;" name="format" id="720p" type="radio" onclick="change_chapter(current_chapter, 720)">&nbsp;&nbsp;720 P
+        </li>
+        <li>
+          <input style="margin-top: 8px; cursor: pointer;" name="format" id="1080p" type="radio" onclick="change_chapter(current_chapter, 1080)">&nbsp;&nbsp;1080 P
+        </li>
+      </ul>
+    </div>
+
+    <div class="page-content-area">
+      <div style="width: 100%; height: auto; border:1px; box-sizing: border-box;" id="multi_video_block"></div>
+      <div style="margin: 0.5rem 2rem 2rem 2rem;" id=video_message> </div>
+    </div>
+
+    <div class="page-right-sidebar">
+      <div class="homeADDright prs-inner">
+        <div class="right-addsense">
+          <script type="text/javascript">
+              google_ad_client = "pub-6646446076038181";
+              //120x600, right bar
+              google_ad_slot = "5819006657";
+              google_ad_width = 115;
+              google_ad_height = 600;
+          </script>
+          <script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
         </div>
-      </td>
-    </tr>
-    <tr >
-      <td></td><td ></td>
-    </tr>
-  </table>
+      </div>
+    </div>
+
+  </div>
+  
   <footer class="sticky-footer">
     <div class="container">
         <div class="row">
-            <!--<div class="col-sm-4 pd-l-0"><span>Sponsers: &nbsp;&nbsp; <img src="img/mta-thumb.png"/></span></div>-->
             <div class="col-sm-12 text-center">
                 <small>Copyright owned by the volunteers contributing to the system and its contents (2006 - <span id=copyright_year></span>)</small>
                 <small>Comments and Questions: support@canonizer.com</small>
-	              <small><a href="{{url('privacypolicy')}}">Privacy Policy</a> | Pattent: US 8,160,970 B2 | <a href="{{url('termservice')}}">Terms & Services</a></small>
+	              <small><a href="https://canonizer.com/privacypolicy">Privacy Policy</a> | Pattent: US 8,160,970 B2 | <a href="https://canonizer.com/termservice">Terms & Services</a></small>
             </div>
         </div>
     </div>
   </footer>
 
-
 </body>
-
-<style>
-.centered {
-    display: block;
-    margin-left: auto;
-    margin-top: 4px;
-    margin-right: auto }
-
-  figure {
-    font-size: 0;
-    position: relative;
-    background: #000;
-  }
-  figure video {
-    width: 75%;
-    height: auto;
-    display: inline-block;
-  }
-  figure figcaption {
-    position: absolute;
-    right: 0; top: 0;
-    background: rgb(245, 245, 245);
-    width: 25%;
-    font-size: .8rem;
-    color: #666;
-    height: 100%;
-    overflow-y: scroll;
-  }
-  figure figcaption ol {
-    position: relative;
-    list-style-type: none;
-    margin: 0; padding: 0;
-  }
-  figure figcaption ol li {
-    padding: .7rem 1rem;
-    border-bottom: 1px dashed #000;
-    transition: .3s;
-  }
-  .current {
-    background: hsl(45,80%,50%);
-    color: #000;
-  }
-
-  li {
-    color: rgb(0, 0, 255);
-    cursor: pointer;
-  }
-
-.strong-menu-active {
-  font-weight:600;
-  color: #00E060	;   /* #00b050	; #10e410	 ; #1cb41c	; */
-  background-color: #ffefd2; /* #f6efe2  -webkit-linear-gradient(left, #ffefd2 , #eeeff3); */
-}
-
-video {
-  /* override other styles to make responsive */
-  width: 100%    !important;
-  height: auto   !important;
-}
-
-
-a.down {
-  background: #bbb;
-  border-top: solid 2px #777;
-  border-left: solid 2px #777;
-  border-bottom: solid 2px #eaeaea;
-  border-right: solid 2px #eaeaea;
-}
-.consciousness {
-    /* width: 100%; */
-    /* max-width: 700px; */
-    margin: 0 auto;
-    /* height: 60vh !important; */
-}
-</style>
-
 </html>
-
-
