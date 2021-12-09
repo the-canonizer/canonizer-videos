@@ -82,17 +82,36 @@
 
 @media screen and (min-width: 768px) {
   .page-content-area {
-    margin: 0 15px;
     -webkit-box-flex: 1;
         -ms-flex: auto;
             flex: auto;
-    padding: 32px;
+    padding: 30px;
   }
 }
 
 @media screen and (max-width: 767px) {
   .page-content-area {
-    padding: 1.5rem;
+    padding: 20px;
+  }
+}
+
+.page-content-area .video-messages {
+  padding: 24px 20px 0 20px;
+}
+
+.page-content-area .video-messages ul, .page-content-area .video-messages ol {
+  padding-left: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .page-content-area .video-messages {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .page-content-area .video-messages {
+    font-size: 11px;
   }
 }
 
@@ -103,6 +122,7 @@
 @media screen and (min-width: 768px) {
   .page-left-sidebar {
     width: 220px;
+    margin-right: 15px;
   }
 }
 
@@ -147,7 +167,8 @@
 
 @media screen and (min-width: 768px) {
   .page-right-sidebar {
-    width: 150px;
+    width: 115px;
+    margin-left: 15px;
   }
 }
 
@@ -157,11 +178,10 @@
 
 @media screen and (min-width: 768px) {
   .page-right-sidebar .prs-inner {
-    width: 150px;
+    width: 115px;
     position: absolute;
     top: 15px;
     right: 15px;
-    padding: 2rem;
   }
 }
 

@@ -48,12 +48,23 @@
                 height: auto;
             }
             @media screen and (min-width: 768px) {
-                margin: 0 15px;
                 flex: auto;
-                padding: 32px;
+                padding: 30px;
             }
             @media screen and (max-width: 767px) {
-                padding: 1.5rem;
+                padding: 20px;
+            }
+            .video-messages {
+                padding: 24px 20px 0 20px;
+                ul, ol {
+                    padding-left: 20px;
+                }
+                @media screen and (min-width: 768px) {
+                    font-size: 14px;
+                }
+                @media screen and (max-width: 767px) {
+                    font-size: 11px;
+                }
             }
         }
     }
@@ -61,6 +72,7 @@
         padding: 2rem 0;
         @media screen and (min-width: 768px) {
             width: 220px;
+            margin-right: 15px;
         }
         .uppermenu {
             padding-left: 15px;
@@ -96,16 +108,16 @@
     }
     &-right-sidebar {
         @media screen and (min-width: 768px) {
-            width: 150px;
+            width: 115px;
+            margin-left: 15px;
         }
         .prs-inner {
             max-width: inherit;
             @media screen and (min-width: 768px) {
-                width: 150px;
+                width: 115px;
                 position: absolute;
                 top: 15px;
                 right: 15px;
-                padding: 2rem;
             }
             @media screen and (max-width: 767px) {
                 text-align: center;
