@@ -95,6 +95,26 @@
   }
 }
 
+.page-content-area .video-messages {
+  padding: 24px 20px 0 20px;
+}
+
+.page-content-area .video-messages ul, .page-content-area .video-messages ol {
+  padding-left: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .page-content-area .video-messages {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .page-content-area .video-messages {
+    font-size: 11px;
+  }
+}
+
 .page-left-sidebar {
   padding: 2rem 0;
 }
