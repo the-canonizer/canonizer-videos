@@ -1,0 +1,7 @@
+#include <math.h>
+
+float r = sqrt(pow(@P.x,2)+pow(@P.y,2)+pow(@P.z,2));
+float v = 2*atan(1/(2*r));
+float rho = PI-v;
+vector pos = set(@P.x*rho/r, @P.y*rho/r, @P.z*rho/r);
+@P = pos;
