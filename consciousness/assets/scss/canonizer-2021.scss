@@ -1,0 +1,129 @@
+.page-header {
+    padding: 15px;
+    @media screen and (min-width: 768px) {
+        display: flex;
+        align-items: center;
+    }
+    @media screen and (max-width: 767px) {
+        border-bottom: #e1ded9 1px solid;
+    }
+    .site-logo {
+        @media screen and (min-width: 768px) {
+            width: 235px;
+        }
+        @media screen and (max-width: 767px) {
+            text-align: center;
+        }
+    }
+    .page-title {
+        text-align: center;
+        @media screen and (min-width: 768px) {
+            width: calc(100% - 385px);
+        }
+        h1 {
+            margin: 1rem 0;
+            font-weight: bold;
+            padding: 0 15px;
+            @media screen and (min-width: 1200px) {
+                font-size: 3rem;
+            }
+            @media screen and (max-width: 1199px) {
+                font-size: 2rem;
+            }
+        }
+    }
+}
+
+.page {
+    &-content {
+        &-wrap {
+            padding: 15px;
+            @media screen and (min-width: 768px) {
+                display: flex;}
+            }
+        &-area {
+            background-color: #FFF;
+            video {
+                width: 100%;
+                height: auto;
+            }
+            @media screen and (min-width: 768px) {
+                flex: auto;
+                padding: 30px;
+            }
+            @media screen and (max-width: 767px) {
+                padding: 20px;
+            }
+            .video-messages {
+                padding: 24px 20px 0 20px;
+                ul, ol {
+                    padding-left: 20px;
+                }
+                @media screen and (min-width: 768px) {
+                    font-size: 14px;
+                }
+                @media screen and (max-width: 767px) {
+                    font-size: 11px;
+                }
+            }
+        }
+    }
+    &-left-sidebar {
+        padding: 2rem 0;
+        @media screen and (min-width: 768px) {
+            width: 220px;
+            margin-right: 15px;
+        }
+        .uppermenu {
+            padding-left: 15px;
+            li {
+                cursor: pointer;
+                margin: 5px 0;
+                &:not(.menu-active) {
+                    color: rgb(0, 0, 255);
+                }
+                &.menu-active {
+                    color: #1cb41c;
+                }
+            }
+        }
+        .lowermneu {
+            list-style: none;
+            margin: 24px 0 0 0;
+            padding: 10px 15px !important;
+            border: 1px dotted #ccc;
+            li {
+                &+li {
+                    margin-top: 5px;
+                    margin-left: 15px;
+                }
+            }
+            @media screen and (min-width: 768px) {
+                margin-top: 100px;
+            }
+            .format-heading {
+                font-weight: bold;
+            }
+        }
+    }
+    &-right-sidebar {
+        @media screen and (min-width: 768px) {
+            width: 115px;
+            margin-left: 15px;
+        }
+        .prs-inner {
+            max-width: inherit;
+            @media screen and (min-width: 768px) {
+                width: 115px;
+                position: absolute;
+                top: 15px;
+                right: 15px;
+            }
+            @media screen and (max-width: 767px) {
+                text-align: center;
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    }
+}
