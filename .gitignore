@@ -14,4 +14,7 @@ desktop.ini
 /Consciousness_3D/render/**
 *.pkf
 /Consciousness_3D/backup/**
+/Animation/**/Adobe After Effects Auto-Save/**
+/Animation/**/*_AME/**
+
 
