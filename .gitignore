@@ -6,6 +6,7 @@ desktop.ini
 *.abc
 *.mov
 *.m4v
+*.exr
 /UE_Canonizer/**
 /Jim_For_Mayor/**
 /repositories/**
@@ -16,5 +17,6 @@ desktop.ini
 /Consciousness_3D/backup/**
 /Animation/**/Adobe After Effects Auto-Save/**
 /Animation/**/*_AME/**
+**/backup/*.hiplc
 
 
