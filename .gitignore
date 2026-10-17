@@ -7,7 +7,9 @@ desktop.ini
 *.mov
 *.m4v
 *.exr
-/UE_Canonizer/**
+/UE_Canonizer/Saved
+/UE_Canonizer/Intermediate
+/UE_Canonizer/DerivedDataCache
 /Jim_For_Mayor/**
 /repositories/**
 /Consciousness_3D/flipbook/**
