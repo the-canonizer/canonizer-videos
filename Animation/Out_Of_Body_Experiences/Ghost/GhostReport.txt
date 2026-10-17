@@ -1,0 +1,26 @@
+Report created: 
+	23/02/2023	13:04:57
+
+Project name: Ghost.aep
+
+Source files collected to: 
+	Z:\Temp\Ghost
+
+Source files collected: For all comps
+
+Collected comps:  
+	Comp 1
+	Ghost
+	
+Number of collected files:  0
+
+Size of collected files:  0 KB
+
+Rendering plug-ins:
+	Classic 3D
+	
+Effects used:  1
+
+Effect:  Puppet
+	
+
